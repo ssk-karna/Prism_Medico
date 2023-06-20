@@ -231,101 +231,108 @@ class _ProductListState extends State<ProductList> {
                                         color: Colors.grey),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width / 5,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "Stock :",
-                                            style: TextStyle(
-                                                fontFamily: "Poppins-semibold",
-                                                fontSize: 12,
-                                                color: MyColors.textcolor),
-                                          ),
-                                          stockavailable
-                                              ? Icon(
-                                                  Icons.check_circle,
-                                                  color: Colors.green,
-                                                  size: 20,
-                                                )
-                                              : Icon(
-                                                  Icons.cancel,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.grey.shade300),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          IconButton(
-                                              icon: Icon(
-                                                Icons.remove,
-                                                color: MyColors.textcolor,
-                                                size: 15,
-                                              ),
-                                              onPressed: () {
-                                                counter--;
-                                              }),
-                                          Text(
-                                            counter.toString(),
-                                            style: TextStyle(
-                                                color: MyColors.textcolor,
-                                                fontFamily: "Poppins-regular"),
-                                          ),
-                                          IconButton(
-                                              icon: Icon(
-                                                Icons.add,
-                                                color: MyColors.textcolor,
-                                                size: 15,
-                                              ),
-                                              onPressed: () {
-                                                counter++;
-                                              })
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) => Cart()));
-                                      },
-                                      child: Container(
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            color: MyColors.themecolor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Center(
-                                            child: Text(
-                                              "ADD",
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 1,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                6,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Stock :",
                                               style: TextStyle(
                                                   fontFamily:
                                                       "Poppins-semibold",
                                                   fontSize: 12,
-                                                  color: Colors.white),
+                                                  color: MyColors.textcolor),
+                                            ),
+                                            stockavailable
+                                                ? Icon(
+                                                    Icons.check_circle,
+                                                    color: Colors.green,
+                                                    size: 20,
+                                                  )
+                                                : Icon(
+                                                    Icons.cancel,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.grey.shade300),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                                icon: Icon(
+                                                  Icons.remove,
+                                                  color: MyColors.textcolor,
+                                                  size: 15,
+                                                ),
+                                                onPressed: () {
+                                                  counter--;
+                                                }),
+                                            Text(
+                                              counter.toString(),
+                                              style: TextStyle(
+                                                  color: MyColors.textcolor,
+                                                  fontFamily:
+                                                      "Poppins-regular"),
+                                            ),
+                                            IconButton(
+                                                icon: Icon(
+                                                  Icons.add,
+                                                  color: MyColors.textcolor,
+                                                  size: 15,
+                                                ),
+                                                onPressed: () {
+                                                  counter++;
+                                                })
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Cart()));
+                                        },
+                                        child: Container(
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              color: MyColors.themecolor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Center(
+                                              child: Text(
+                                                "ADD",
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "Poppins-semibold",
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
