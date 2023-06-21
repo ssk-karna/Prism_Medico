@@ -391,7 +391,7 @@ class _CartState extends State<Cart> {
         // Navigator.of(context).pop();
       },
       child: Text(
-        'OKEY',
+        'YES',
         style: TextStyle(
           color: Colors.white,
           fontFamily: "Poppins-Semibold",
@@ -501,20 +501,22 @@ class _CartState extends State<Cart> {
         color: Colors.green,
         size: 80,
       ),
-      content: Text(
-        "Your Order has been placed.",
-        style: TextStyle(
-          fontFamily: "Poppins-semibold",
-          fontSize: 14,
+      content: Container(
+        height: 30,
+        child: Center(
+          child: Text(
+            "Your Order has been placed.",
+            style: TextStyle(
+              fontFamily: "Poppins-semibold",
+              fontSize: 14,
+            ),
+          ),
         ),
       ),
       actions: [
         Container(
-          child: Row(
-            children: [
-              Center(child: okButton),
-            ],
-          ),
+          width: MediaQuery.of(context).size.width,
+          child: Center(child: okButton),
         ),
       ],
     );

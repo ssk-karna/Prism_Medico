@@ -31,16 +31,15 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 Container(
+                  // color: Colors.yellow,
                   margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 3,
+                    top: MediaQuery.of(context).size.height / 5.5,
                   ),
                   child: Image.asset(
-                    "assets/images/Prism logo 1.png",
-                    height: 80,
+                    "assets/images/Prism-logo.png",
+                    height: 150,
+                    width: MediaQuery.of(context).size.width,
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 20,
                 ),
                 CustomTextFieldWidget(
                   labelText: "Enter Email / Phone no",
@@ -113,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 20),
                 FlatButton(
-                  height: 60,
+                  height: 45,
                   minWidth: MediaQuery.of(context).size.width / 2,
                   padding: EdgeInsets.all(10),
                   shape: (RoundedRectangleBorder(
@@ -212,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontFamily: "Poppins-Medium",
                         color: Colors.grey,
-                        fontSize: 14,
+                        fontSize: 15,
                       ),
                     ),
                     SizedBox(
@@ -223,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         "Sign Up",
                         style: TextStyle(
                           fontFamily: "Poppins-Bold",
-                          fontSize: 14,
+                          fontSize: 15,
                         ),
                       ),
                       onTap: () {

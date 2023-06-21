@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prism_medico/Screens/cart.dart';
 import 'package:prism_medico/Screens/homepage.dart';
+import 'package:prism_medico/Screens/notification.dart';
 import 'package:prism_medico/Screens/profile.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
 
@@ -78,11 +79,23 @@ class _ProductListState extends State<ProductList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Image.asset(
-                        "assets/images/Notification.png",
+                      InkWell(
+                        child: Image.asset(
+                          "assets/images/Notification.png",
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Notificationscreen()));
+                        },
                       ),
-                      Image.asset(
-                        "assets/images/Cart.png",
+                      InkWell(
+                        child: Image.asset(
+                          "assets/images/Cart.png",
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Cart()));
+                        },
                       ),
                     ],
                   ),
@@ -151,23 +164,18 @@ class _ProductListState extends State<ProductList> {
                     ]),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/serach.png",
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Search the product",
-                        style: TextStyle(
-                            fontFamily: "Poppins-regular",
-                            fontSize: 14,
-                            color: Colors.grey),
-                      )
-                    ],
-                  ),
+                  child: TextFormField(
+                      decoration: InputDecoration(
+                    border: InputBorder.none,
+                    alignLabelWithHint: true,
+                    labelText: "Search the product",
+                    prefixIcon: Icon(Icons.search),
+                    labelStyle: new TextStyle(
+                      color: Colors.grey,
+                      fontFamily: "Poppins-Regular",
+                      fontSize: 12,
+                    ),
+                  )),
                 ),
               ),
             ),
@@ -198,10 +206,14 @@ class _ProductListState extends State<ProductList> {
                           height: 50,
                           // fit: BoxFit.fill,
                         ),
+                        SizedBox(
+                          width: 15,
+                        ),
                         InkWell(
                           onTap: () {},
                           child: Container(
-                            width: 300,
+                            // color: Colors.yellow,
+                            width: MediaQuery.of(context).size.width / 1.5,
                             child: Column(
                               children: [
                                 Row(
@@ -221,7 +233,6 @@ class _ProductListState extends State<ProductList> {
                                   ],
                                 ),
                                 Container(
-                                  width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     "Sacubitril 49mg+valsartan 26 mg 9.5 mm tab 5x1x14",
                                     softWrap: true,
@@ -232,7 +243,8 @@ class _ProductListState extends State<ProductList> {
                                   ),
                                 ),
                                 Container(
-                                  width: MediaQuery.of(context).size.width / 1,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -267,6 +279,10 @@ class _ProductListState extends State<ProductList> {
                                       ),
                                       Container(
                                         height: 30,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.5 /
+                                                2.5,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -311,7 +327,11 @@ class _ProductListState extends State<ProductList> {
                                                       Cart()));
                                         },
                                         child: Container(
-                                          width: 100,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.5 /
+                                              4,
                                           decoration: BoxDecoration(
                                               color: MyColors.themecolor,
                                               borderRadius:

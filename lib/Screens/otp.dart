@@ -20,8 +20,8 @@ class _otpVerifyState extends State<otpVerify> {
           children: [
             CustomBGWidget(),
             Container(
-              margin:
-                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 3.3),
               padding: EdgeInsets.only(left: 15, right: 15),
               child: Column(
                 children: [
@@ -42,7 +42,7 @@ class _otpVerifyState extends State<otpVerify> {
                     child: Text(
                       "Enter  the OTP sent to on",
                       style: TextStyle(
-                          fontFamily: "Poppins-Normal",
+                          fontFamily: "Poppins-REgular",
                           fontSize: 14,
                           color: Colors.grey),
                     ),
@@ -54,7 +54,7 @@ class _otpVerifyState extends State<otpVerify> {
                       Text(
                         "+91 00000 00000",
                         style: TextStyle(
-                            fontFamily: "Poppins-Normal",
+                            fontFamily: "Poppins-Regular",
                             fontSize: 14,
                             color: Colors.grey),
                       ),
@@ -100,14 +100,14 @@ class _otpVerifyState extends State<otpVerify> {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width / 3),
+                        left: MediaQuery.of(context).size.width / 3.1),
                     width: MediaQuery.of(context).size.width / 1,
                     child: Row(
                       children: [
                         Text(
                           "Didn't receive the OTP ?",
                           style: TextStyle(
-                              fontFamily: "Poppins-normal",
+                              fontFamily: "Poppins-semibold",
                               fontSize: 12,
                               color: Colors.black),
                         ),
@@ -119,7 +119,7 @@ class _otpVerifyState extends State<otpVerify> {
                           style: TextStyle(
                               fontFamily: "Poppins-Semibold",
                               fontSize: 12,
-                              color: Colors.blue.shade200),
+                              color: MyColors.themecolor),
                         ),
                       ],
                     ),

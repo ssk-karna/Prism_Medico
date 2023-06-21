@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
           Center(
             child: Image.asset(
-              "assets/images/Prism logo 1.png",
+              "assets/images/Prism-logo.png",
             ),
           ),
         ],

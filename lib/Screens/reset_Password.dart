@@ -32,7 +32,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               CustomBGWidget(),
               Container(
                 margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 3),
+                    top: MediaQuery.of(context).size.height / 3.3),
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
                   children: [
@@ -51,7 +51,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       child: Text(
                         "Create your new password to login",
                         style: TextStyle(
-                            fontFamily: "Poppins-Normal",
+                            fontFamily: "Poppins-Regular",
                             fontSize: 14,
                             color: Colors.grey),
                       ),

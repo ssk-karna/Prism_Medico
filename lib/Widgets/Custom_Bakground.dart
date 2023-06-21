@@ -12,16 +12,11 @@ class CustomBGWidget extends StatelessWidget {
           ),
         ),
         Align(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.topCenter,
           child: Image.asset(
-            "assets/images/E2.png",
+            "assets/images/Group 1344.png",
+            fit: BoxFit.fill,
             //height: MediaQuery.of(context).size.height / 3,
-          ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Image.asset(
-            "assets/images/E1.png",
           ),
         ),
       ],

@@ -78,158 +78,254 @@ class _AllProductState extends State<AllProduct> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: MyColors.themecolor,
-        //bottomOpacity: 1.0,
-        elevation: 1,
-        title: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  // width: MediaQuery.of(context).size.width / 1,
-                  child: Row(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "All Products",
-                          style: TextStyle(
-                            fontFamily: "Poppins-Semibold",
-                            fontSize: 18,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: MyColors.themecolor,
+          //bottomOpacity: 1.0,
+          elevation: 1,
+          title: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    // width: MediaQuery.of(context).size.width / 1,
+                    child: Row(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "All Products",
+                            style: TextStyle(
+                              fontFamily: "Poppins-Semibold",
+                              fontSize: 18,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 6,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        child: Image.asset(
-                          "assets/images/Notification.png",
+                  Container(
+                    width: MediaQuery.of(context).size.width / 6,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          child: Image.asset(
+                            "assets/images/Notification.png",
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Notificationscreen()));
+                          },
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Notificationscreen()));
-                        },
-                      ),
-                      InkWell(
-                        child: Image.asset(
-                          "assets/images/Cart.png",
+                        InkWell(
+                          child: Image.asset(
+                            "assets/images/Cart.png",
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Cart()));
+                          },
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => Cart()));
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          color: MyColors.themecolor,
-        ),
-        child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  child: Image.asset(
-                    "assets/images/Vector.png",
+        bottomNavigationBar: Container(
+          height: 60,
+          decoration: BoxDecoration(
+            color: MyColors.themecolor,
+          ),
+          child: Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    child: Image.asset(
+                      "assets/images/Vector.png",
+                    ),
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Homepage()));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Homepage()));
-                  },
-                ),
-                InkWell(
-                  child: Image.asset(
-                    "assets/images/account.png",
+                  InkWell(
+                    child: Image.asset(
+                      "assets/images/account.png",
+                    ),
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Profile()));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Profile()));
-                  },
-                ),
-                InkWell(
-                  child: Image.asset(
-                    "assets/images/order.png",
+                  InkWell(
+                    child: Image.asset(
+                      "assets/images/order.png",
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => OrderHistory()));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => OrderHistory()));
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 1.5,
-              child: Column(
-                // mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    child: TextFormField(
-                        controller: controller,
-                        onFieldSubmitted: (value) {},
-                        onChanged: (value) => typeAheadFilter(value),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                          //hintText: hint,
-                          labelText: "Search",
-                          alignLabelWithHint: false,
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                            borderSide: BorderSide(
+        body: Container(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 1.5,
+                child: Column(
+                  // mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      child: TextFormField(
+                          controller: controller,
+                          onFieldSubmitted: (value) {},
+                          onChanged: (value) => typeAheadFilter(value),
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search,
                               color: Colors.grey,
-                              width: 2.0,
                             ),
-                          ),
-                          //   hintTextDirection: TextDirection.rtl),
-                        )),
-                  ),
-                  const SizedBox(height: 10),
-                  if (suggestionList.isNotEmpty ||
-                      controller.text.isNotEmpty) ...[
-                    Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.all(10),
-                        shrinkWrap: true,
-                        itemCount: suggestionList.length,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              showOrderplaced(context);
+                            //hintText: hint,
+                            labelText: "Search",
+                            alignLabelWithHint: false,
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 2.0,
+                              ),
+                            ),
+                            //   hintTextDirection: TextDirection.rtl),
+                          )),
+                    ),
+                    const SizedBox(height: 10),
+                    if (suggestionList.isNotEmpty ||
+                        controller.text.isNotEmpty) ...[
+                      Expanded(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(10),
+                          shrinkWrap: true,
+                          itemCount: suggestionList.length,
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                showOrderplaced(context);
 
-                              // show the dialog
-                            },
-                            child: Container(
+                                // show the dialog
+                              },
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          offset: Offset(0, 2),
+                                          blurRadius: 5.0,
+                                          color: Colors.grey.withOpacity(0.6),
+                                        ),
+                                      ]),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              (suggestionList[index]),
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      "Poppins-semibold",
+                                                  fontSize: 14),
+                                            ),
+                                            Text(
+                                              "Pack: 20 cap",
+                                              style: TextStyle(
+                                                  fontFamily: "Poppins-regular",
+                                                  fontSize: 11,
+                                                  color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "PFIZER LTD NERO",
+                                              style: TextStyle(
+                                                  fontFamily: "Poppins-regular",
+                                                  fontSize: 11,
+                                                  color: Colors.grey),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  5,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Stock :",
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "Poppins-semibold",
+                                                        fontSize: 12,
+                                                        color:
+                                                            MyColors.textcolor),
+                                                  ),
+                                                  stockavailable
+                                                      ? Icon(
+                                                          Icons.check_circle,
+                                                          color: Colors.green,
+                                                          size: 20,
+                                                        )
+                                                      : Icon(
+                                                          Icons.cancel,
+                                                          color: Colors.red,
+                                                          size: 20,
+                                                        ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                            );
+                          },
+                        ),
+                      )
+                    ] else ...[
+                      Container(),
+                      /*Expanded(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(10),
+                          shrinkWrap: true,
+                          itemCount: suggestions.length,
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemBuilder: (context, index) {
+                            return Container(
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
@@ -249,7 +345,7 @@ class _AllProductState extends State<AllProduct> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            (suggestionList[index]),
+                                            (suggestions[index]),
                                             style: TextStyle(
                                                 fontFamily: "Poppins-semibold",
                                                 fontSize: 14),
@@ -287,8 +383,7 @@ class _AllProductState extends State<AllProduct> {
                                                       fontFamily:
                                                           "Poppins-semibold",
                                                       fontSize: 12,
-                                                      color:
-                                                          MyColors.textcolor),
+                                                      color: MyColors.textcolor),
                                                 ),
                                                 stockavailable
                                                     ? Icon(
@@ -308,107 +403,16 @@ class _AllProductState extends State<AllProduct> {
                                       )
                                     ],
                                   ),
-                                )),
-                          );
-                        },
-                      ),
-                    )
-                  ] else ...[
-                    Container(),
-                    /*Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.all(10),
-                        shrinkWrap: true,
-                        itemCount: suggestions.length,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(0, 2),
-                                      blurRadius: 5.0,
-                                      color: Colors.grey.withOpacity(0.6),
-                                    ),
-                                  ]),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          (suggestions[index]),
-                                          style: TextStyle(
-                                              fontFamily: "Poppins-semibold",
-                                              fontSize: 14),
-                                        ),
-                                        Text(
-                                          "Pack: 20 cap",
-                                          style: TextStyle(
-                                              fontFamily: "Poppins-regular",
-                                              fontSize: 11,
-                                              color: Colors.grey),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "PFIZER LTD NERO",
-                                          style: TextStyle(
-                                              fontFamily: "Poppins-regular",
-                                              fontSize: 11,
-                                              color: Colors.grey),
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              5,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Stock :",
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "Poppins-semibold",
-                                                    fontSize: 12,
-                                                    color: MyColors.textcolor),
-                                              ),
-                                              stockavailable
-                                                  ? Icon(
-                                                      Icons.check_circle,
-                                                      color: Colors.green,
-                                                      size: 20,
-                                                    )
-                                                  : Icon(
-                                                      Icons.cancel,
-                                                      color: Colors.red,
-                                                      size: 20,
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ));
-                        },
-                      ),
-                    )*/
-                  ]
-                ],
+                                ));
+                          },
+                        ),
+                      )*/
+                    ]
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
