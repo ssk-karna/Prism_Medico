@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:prism_medico/Widgets/Custom_Bakground.dart';
-
-import 'homepage.dart';
+import 'package:prism_medico/model/latestProduct.dart';
 
 class Faq extends StatefulWidget {
-  _Faqstate createState() => _Faqstate();
+  final List<Latest_Product_model> cart;
+
+  Faq({this.cart});
+  _Faqstate createState() => _Faqstate(this.cart);
 }
 
 class _Faqstate extends State<Faq> {
+  _Faqstate(this.cart);
+  List<Latest_Product_model> cart;
+  bool pressed1 = false;
   bool pressed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        //   iconTheme: MyColors.textcolor,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         title: Row(
@@ -33,12 +39,12 @@ class _Faqstate extends State<Faq> {
           CustomBGWidget(),
           Form(
             child: Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(10),
               child: Column(
                 children: [
                   Container(
                     margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 4.5),
+                        top: MediaQuery.of(context).size.height / 3.5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -150,12 +156,12 @@ class _Faqstate extends State<Faq> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        pressed = !pressed;
+                        pressed1 = !pressed1;
                       });
                     },
                     child: Column(children: <Widget>[
                       AnimatedContainer(
-                        height: pressed
+                        height: pressed1
                             ? MediaQuery.of(context).size.height / 4
                             : 45,
                         decoration: BoxDecoration(
@@ -177,7 +183,7 @@ class _Faqstate extends State<Faq> {
                                         fontSize: 14,
                                         color: Colors.grey.shade800),
                                   ),
-                                  pressed
+                                  pressed1
                                       ? Icon(
                                           Icons.minimize,
                                           color: Colors.red,
@@ -192,7 +198,7 @@ class _Faqstate extends State<Faq> {
                             Positioned(
                                 bottom: 0,
                                 top: 20,
-                                child: pressed
+                                child: pressed1
                                     ? Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,

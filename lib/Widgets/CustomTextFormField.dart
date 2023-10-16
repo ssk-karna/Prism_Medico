@@ -6,13 +6,27 @@ class CustomTextFieldWidget extends StatelessWidget {
   final validator;
   final keboardtype;
   final icon;
+  final saved;
+  final inialValue;
+  final maxline;
+  final counter;
+  final focusNode;
+  final action;
+  final change;
   const CustomTextFieldWidget(
       {Key key,
+      this.saved,
       this.controller,
       this.labelText,
       this.validator,
       this.keboardtype,
-      this.icon})
+      this.icon,
+      this.inialValue,
+      this.maxline,
+      this.counter,
+      this.focusNode,
+      this.action,
+      this.change})
       : super(
           key: key,
         );
@@ -22,9 +36,13 @@ class CustomTextFieldWidget extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height / 15,
       child: TextFormField(
+        focusNode: focusNode,
+        textInputAction: action,
         decoration: InputDecoration(
           alignLabelWithHint: true,
           labelText: labelText,
+          hintText: inialValue,
+          counterText: counter,
           prefixIcon: icon,
           labelStyle: new TextStyle(
             color: Colors.grey,
@@ -41,9 +59,12 @@ class CustomTextFieldWidget extends StatelessWidget {
             ),
           ),
         ),
+        maxLength: maxline,
         controller: controller,
         keyboardType: keboardtype,
         validator: validator,
+        onSaved: saved,
+        onChanged: change,
       ),
     );
   }

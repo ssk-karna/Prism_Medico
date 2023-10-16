@@ -1,7 +1,15 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+
 import 'package:prism_medico/Screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  AwesomeNotifications().initialize("assets/images/Prism-logo.png", [
+    NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Prism_medico',
+        channelDescription: 'For tws')
+  ]);
   runApp(MyApp());
 }
 

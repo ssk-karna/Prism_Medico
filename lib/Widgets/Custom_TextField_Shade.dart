@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class CustomTextFieldShade extends StatelessWidget {
@@ -7,16 +9,22 @@ class CustomTextFieldShade extends StatelessWidget {
   final keboardtype;
   final icon;
   final height, width;
-  const CustomTextFieldShade(
-      {Key key,
-      this.controller,
-      this.labelText,
-      this.validator,
-      this.keboardtype,
-      this.icon,
-      this.height,
-      this.width})
-      : super(
+  final maxline;
+  final counter;
+  final saved;
+  const CustomTextFieldShade({
+    Key key,
+    this.saved,
+    this.controller,
+    this.labelText,
+    this.validator,
+    this.keboardtype,
+    this.icon,
+    this.height,
+    this.width,
+    this.maxline,
+    this.counter,
+  }) : super(
           key: key,
         );
 
@@ -40,18 +48,20 @@ class CustomTextFieldShade extends StatelessWidget {
         padding: EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
           decoration: InputDecoration(
-            labelText: labelText,
-            border: InputBorder.none,
-            prefixIcon: icon,
-            labelStyle: TextStyle(
-              color: Colors.grey,
-              fontFamily: "Poppins-Regular",
-              fontSize: 12,
-            ),
-          ),
+              labelText: labelText,
+              border: InputBorder.none,
+              prefixIcon: icon,
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                fontFamily: "Poppins-Regular",
+                fontSize: 12,
+              ),
+              counterText: counter),
+          maxLength: maxline,
           controller: controller,
           keyboardType: keboardtype,
           validator: validator,
+          onSaved: saved,
         ),
       ),
     );

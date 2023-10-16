@@ -1,4 +1,4 @@
-package com.example.prism_medico
+package com.prism_medico
 
 import io.flutter.embedding.android.FlutterActivity
 

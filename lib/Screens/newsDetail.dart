@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:prism_medico/Screens/homepage.dart';
 import 'package:prism_medico/Screens/profile.dart';
+import 'package:prism_medico/Screens/cart.dart';
+import 'package:prism_medico/Screens/notification.dart';
+import 'package:prism_medico/model/latestProduct.dart';
+import 'package:prism_medico/Screens/order_History.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class NewsDetail extends StatefulWidget {
   final newsimage;
   final newtitle;
+  final List<Latest_Product_model> cart;
 
-  NewsDetail({this.newsimage, this.newtitle});
-  _NewsDetailState createState() => _NewsDetailState();
+  NewsDetail({this.newsimage, this.newtitle, this.cart});
+  _NewsDetailState createState() => _NewsDetailState(this.cart);
 }
 
 class _NewsDetailState extends State<NewsDetail> {
+  _NewsDetailState(this.cart);
+  List<Latest_Product_model> cart;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,11 +55,80 @@ class _NewsDetailState extends State<NewsDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Image.asset(
-                        "assets/images/Notification.png",
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Notificationscreen(
+                                        cart: cart,
+                                      )));
+                        },
+                        child: SvgPicture.asset(
+                          "assets/images/notification.svg",
+                        ),
                       ),
-                      Image.asset(
-                        "assets/images/Cart.png",
+                      GestureDetector(
+                        child: Container(
+                          height: 50,
+                          width: 40,
+                          child: Stack(
+                            children: [
+                              cart.length == 0
+                                  ? InkWell(
+                                      onTap: () {
+                                        Fluttertoast.showToast(
+                                            msg: "Cart is Empty...",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.SNACKBAR,
+                                            timeInSecForIosWeb: 10,
+                                            backgroundColor:
+                                                MyColors.themecolor,
+                                            textColor: MyColors.textcolor,
+                                            fontSize: 12.0);
+                                      },
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          "assets/images/cart.svg",
+                                        ),
+                                      ),
+                                    )
+                                  : Stack(
+                                      children: [
+                                        Center(
+                                          child: SvgPicture.asset(
+                                            "assets/images/cart.svg",
+                                          ),
+                                        ),
+                                        Positioned(
+                                          right: 0.5,
+                                          top: 5,
+                                          child: CircleAvatar(
+                                            radius: 9.5,
+                                            backgroundColor: MyColors.textcolor,
+                                            foregroundColor: Colors.white,
+                                            child: Text(
+                                              cart.length.toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          if (cart.isNotEmpty)
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => Cart(cart: cart),
+                              ),
+                            );
+                        },
                       ),
                     ],
                   ),
@@ -61,7 +139,7 @@ class _NewsDetailState extends State<NewsDetail> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 60,
+        height: 50,
         decoration: BoxDecoration(
           color: MyColors.themecolor,
         ),
@@ -72,25 +150,39 @@ class _NewsDetailState extends State<NewsDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
-                  child: Image.asset(
-                    "assets/images/Vector.png",
+                  child: SvgPicture.asset(
+                    "assets/images/Home.svg",
                   ),
                   onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Homepage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Homepage(
+                                  cart: cart,
+                                )));
+                  },
+                ),
+                InkWell(
+                  child: SvgPicture.asset(
+                    "assets/images/account.svg",
+                  ),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Profile()));
                   },
                 ),
                 InkWell(
                   child: Image.asset(
-                    "assets/images/account.png",
+                    "assets/images/order.png",
                   ),
                   onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Profile()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => OrderHistory(
+                                  cart: cart,
+                                )));
                   },
-                ),
-                Image.asset(
-                  "assets/images/order.png",
                 ),
               ],
             ),

@@ -3,14 +3,20 @@ import 'package:prism_medico/Screens/homepage.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
 import 'package:prism_medico/Widgets/CustomTextFormField.dart';
 import 'package:prism_medico/Widgets/Custom_Bakground.dart';
+import 'package:prism_medico/model/latestProduct.dart';
 
 enum defaultaddress { yes, no }
 
 class Add_Address extends StatefulWidget {
-  _AddAddressState createState() => _AddAddressState();
+  final List<Latest_Product_model> cart;
+
+  Add_Address({this.cart});
+  _AddAddressState createState() => _AddAddressState(this.cart);
 }
 
 class _AddAddressState extends State<Add_Address> {
+  _AddAddressState(this.cart);
+  List<Latest_Product_model> cart;
   bool _value = false;
   @override
   Widget build(BuildContext context) {
@@ -158,10 +164,12 @@ class _AddAddressState extends State<Add_Address> {
                       textColor: Colors.white,
                       color: MyColors.themecolor,
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Homepage(),
+                              builder: (context) => Homepage(
+                                cart: cart,
+                              ),
                             ));
                         setState(() {
                           // istapped = 'Button tapped';

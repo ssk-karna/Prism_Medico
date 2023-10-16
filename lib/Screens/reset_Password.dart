@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:prism_medico/Repo/newPasswordRepo.dart';
 import 'package:prism_medico/Screens/homepage.dart';
+import 'package:prism_medico/Screens/login.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
-import 'package:prism_medico/Widgets/Custom_AlertDialog.dart';
+import 'package:prism_medico/model/latestProduct.dart';
 import 'package:prism_medico/Widgets/Custom_Bakground.dart';
+import 'package:prism_medico/utills/Internet_Connection.dart';
 
 class ResetPassword extends StatefulWidget {
-  _ResetPasswordState createState() => _ResetPasswordState();
+  List<Latest_Product_model> cart;
+  final email;
+  ResetPassword({this.cart, this.email});
+  _ResetPasswordState createState() => _ResetPasswordState(this.cart);
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
+  _ResetPasswordState(this.cart);
+  List<Latest_Product_model> cart;
   bool _newpasswordVisible = false;
   bool _cinformpasswordVisible = false;
-  final GlobalKey<FormState> _form = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confiPass = TextEditingController();
+  String newPass;
+  String confirmPass;
+  bool _autoValidate = false;
 
   @override
   void initState() {
@@ -25,14 +37,14 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: _form,
+        key: _formKey,
         child: Container(
           child: Stack(
             children: [
               CustomBGWidget(),
               Container(
                 margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 3.3),
+                    top: MediaQuery.of(context).size.height / 3.5),
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
                   children: [
@@ -77,8 +89,11 @@ class _ResetPasswordState extends State<ResetPassword> {
                         child: TextFormField(
                           controller: _pass,
                           validator: (val) {
-                            if (val.isEmpty) return 'Empty';
+                            if (val.isEmpty) return 'Enter Password..';
                             return null;
+                          },
+                          onSaved: (val) {
+                            newPass = val;
                           },
                           keyboardType: TextInputType.text,
                           // controller: _userPasswordController,
@@ -132,9 +147,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                         child: TextFormField(
                           controller: _confiPass,
                           validator: (val) {
-                            // if (val.isEmpty) return '';
-                            // if (val != _pass.text) return 'Not Match';
-                            // return null;
+                            if (val.isEmpty) return 'Enter confirm Password..';
+                            if (val != _pass.text) return 'Not Match';
+                            return null;
+                          },
+                          onSaved: (val) {
+                            confirmPass = val;
                           },
                           keyboardType: TextInputType.text,
                           // controller: _userPasswordController,
@@ -185,10 +203,13 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                       onPressed: () {
                         //_form.currentState.validate();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Homepage()));
+                        onButtonClick();
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => Homepage(
+                        //               cart: cart,
+                        //             )));
 
                         /* if (_pass == _confiPass) {
                           Navigator.pushReplacement(
@@ -216,7 +237,83 @@ class _ResetPasswordState extends State<ResetPassword> {
         ),
       ),
     );
-    _form.currentState.validate();
+  }
+
+  void onButtonClick() async {
+    FocusScope.of(context).unfocus();
+    String forgetpassword;
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      print('form is valid');
+
+      var isInternetConnected = await InternetUtil.isInternetConnected();
+
+      if (isInternetConnected) {
+        // ProgressDialog.showProgressDialog(context);
+        try {
+          var response = await ResetPass_repo.resetPass(
+              widget.email, newPass, confirmPass);
+          print(response.data);
+
+          if (response.status == 201) {
+            // Fluttertoast.showToast(
+            //     msg: "Login Succesfull",
+            //     toastLength: Toast.LENGTH_LONG,
+            //     gravity: ToastGravity.CENTER,
+            //     timeInSecForIosWeb: 10,
+            //     backgroundColor: MyColors.themecolor,
+            //     textColor: MyColors.textcolor,
+            //     fontSize: 12.0);
+            print("1234546");
+            print(response.data);
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LoginScreen(
+                            cart: cart,
+                          )));
+            });
+          } else {
+            Fluttertoast.showToast(
+                msg: "Wrong Email...",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 10,
+                backgroundColor: MyColors.themecolor,
+                textColor: MyColors.textcolor,
+                fontSize: 12.0);
+          }
+        } catch (e) {
+          print(e);
+          setState(() {
+            Fluttertoast.showToast(
+                msg: "Something Wrong, Please Try Again....!!!",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 10,
+                backgroundColor: MyColors.themecolor,
+                textColor: MyColors.textcolor,
+                fontSize: 12.0);
+          });
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "No Internet Connection....!!!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 10,
+            backgroundColor: MyColors.themecolor,
+            textColor: MyColors.textcolor,
+            fontSize: 12.0);
+      }
+
+      //  Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryList()),);
+    } else {
+      setState(() {
+        _autoValidate = true;
+      });
+    }
   }
 }
 
