@@ -5,7 +5,7 @@ class MyAlertDialog extends StatefulWidget {
   final RaisedButton yesButton;
   final RaisedButton noButton;
 
-  MyAlertDialog({this.message, this.yesButton, this.noButton});
+  MyAlertDialog({ this.message,  this.yesButton,  this.noButton});
 
   @override
   _MyAlertDialogState createState() => _MyAlertDialogState();

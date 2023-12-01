@@ -7,6 +7,7 @@ import 'package:prism_medico/Utilities/myColor.dart';
 import 'package:prism_medico/model/User.dart';
 import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
+import 'package:prism_medico/utills/Utils.dart';
 
 class Login_repo {
   static Future<SuperResponse<User_Registration>> Login(
@@ -14,6 +15,7 @@ class Login_repo {
     String password,
   ) async {
     var body = {'email_or_phone': phone, 'password': password};
+    print('The Login url is :- ${Constants.BASE_URL}prism/user/login.php');
     return http
         .post('${Constants.BASE_URL}prism/user/login.php',
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
@@ -39,7 +41,8 @@ class Login_repo {
         // throw new Exception("Error while fetching data");
       }
       print(response.body);
-      Map<dynamic, dynamic> map = json.decode(response.body);
+     // Map<dynamic, dynamic> map = json.decode(response.body.substring(response.body.indexOf('{')));
+      Map<dynamic, dynamic> map = json.decode(Utils.filterResponseString(response.body));
       if (map != null) {
         final data = map['data']['userData'];
         if (data != null && data != "") {

@@ -490,7 +490,7 @@ class _HomepageState extends State<Homepage> {
                                     maxRadius: 45,
                                     minRadius: 45,
                                     backgroundImage: NetworkImage(
-                                      'https://www.prismapp.in/prism/images/user/${userDetails.user_image}',
+                                      '${Constants.BASE_URL}prism/images/user/${userDetails.user_image}',
                                     ),
                                   ),
                           ),
@@ -861,7 +861,7 @@ class _HomepageState extends State<Homepage> {
 
                                                           //color: Colors.yellow,
                                                           child: Image.network(
-                                                            'https://prismapp.in/prism/${e.catImage}',
+                                                            '${Constants.BASE_URL}prism/${e.catImage}',
                                                             fit: BoxFit.fill,
                                                           ),
                                                         ),
@@ -993,7 +993,7 @@ class _HomepageState extends State<Homepage> {
                                                         height: 5,
                                                       ),
                                                       Image.network(
-                                                        'https://prismapp.in/prism/${e.productImage[0]}',
+                                                        '${Constants.BASE_URL}prism/${e.productImage[0]}',
                                                         height: 80,
                                                       ),
                                                       // Image.network(
@@ -1146,7 +1146,7 @@ class _HomepageState extends State<Homepage> {
                                                         height: 5,
                                                       ),
                                                       Image.network(
-                                                        'https://prismapp.in/prism/${e.productImage[0]}',
+                                                        '${Constants.BASE_URL}prism/${e.productImage[0]}',
                                                         height: 80,
                                                       ),
                                                       SizedBox(

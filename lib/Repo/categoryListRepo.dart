@@ -6,6 +6,7 @@ import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Internet_Connection.dart';
 
 import 'package:prism_medico/utills/Super_Responce.dart';
+import 'package:prism_medico/utills/Utils.dart';
 
 class GetCategoryListRepo {
   static Future<SuperResponse<List<category_model>>> getCatgories() async {
@@ -29,7 +30,7 @@ class GetCategoryListRepo {
           throw new Exception("Error while fetching data");
         }
 
-        Map<dynamic, dynamic> map = json.decode(response.body);
+        Map<dynamic, dynamic> map = json.decode(Utils.filterResponseString(response.body));
 
         Iterable data = map['data'];
         List<category_model> categoryList =

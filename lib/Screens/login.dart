@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value.isEmpty) {
                                 return 'Please Enter Mobile no';
                               }
-                              if (value == _mobileNo) {
+                              else if (value == _mobileNo) {
                                 if (value.length < 10) {
                                   return 'Please Enter valid Mobile no';
                                 }
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return 'Please Enter valid Mobile no';
                                 }
                               }
-                              if (value == email) {
+                             else if (value == email) {
                                 if (!value.contains("@")) {
                                   return 'Please Enter valid Email';
                                 }
