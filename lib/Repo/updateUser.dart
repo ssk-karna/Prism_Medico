@@ -10,6 +10,7 @@ import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:prism_medico/utills/Session_Manager.dart';
+import 'package:prism_medico/utills/Utils.dart';
 
 class UpdateUserRepo {
   static Future<SuperResponse<User_Registration>> updateUserr(
@@ -57,14 +58,14 @@ class UpdateUserRepo {
       //'register_type': 'mnumber'
     };
     return http
-        .put('${Constants.BASE_URL}prism/user/update-user.php/$userId',
+        .post('${Constants.BASE_URL}prism/user/update-user.php?user_id=$userId',
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
       if (response.statusCode < 200 ||
           response.statusCode > 404 ||
           json == null) {
-        Map<dynamic, dynamic> map = json.decode(response.body);
+        Map<dynamic, dynamic> map = json.decode(Utils.filterResponseString(response.body));
         final data = map['message'];
         Fluttertoast.showToast(
             msg: data,
@@ -76,7 +77,7 @@ class UpdateUserRepo {
             fontSize: 12.0);
       }
       print(response.body);
-      Map<dynamic, dynamic> map = json.decode(response.body);
+      Map<dynamic, dynamic> map = json.decode(Utils.filterResponseString(response.body));
       final data = map['data']['userData'];
 
       if (data != null && data != "") {

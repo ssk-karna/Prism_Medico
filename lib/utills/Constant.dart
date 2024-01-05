@@ -9,7 +9,7 @@ order_Model orderDetail = order_Model();
 List<order_Model> orderDetailS = List<order_Model>();
 
 class Constants {
-  static const BASE_URL = 'https://prismapp.in/PrismBackUp/ServerSide/';
+  static const BASE_URL = 'https://mktourtravel.com/prism/ServerSide/';
   static const razorpay_key = "rzp_test_5u5gBcl3DCTojr";
 
   static const NO_INTERNET_ERROR = 'No internet connection avaliable.';

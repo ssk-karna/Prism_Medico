@@ -49,6 +49,7 @@ class CustomTextFieldShade extends StatelessWidget {
         child: TextFormField(
           decoration: InputDecoration(
               labelText: labelText,
+              contentPadding: EdgeInsets.symmetric(vertical: 0),
               border: InputBorder.none,
               prefixIcon: icon,
               labelStyle: TextStyle(

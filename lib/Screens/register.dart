@@ -35,6 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   SharedPreferences sharedPreferences;
   bool _passwordVisible = true;
+  bool isButtonDisabled = false;
 
   String _selectedstates;
   String _selectedDist;
@@ -70,6 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     pincodeNode = FocusNode();
     setState(() {
       stateId;
+      isButtonDisabled = false;
     });
   }
 
@@ -583,12 +585,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 )),
                                 textColor: Colors.white,
                                 color: MyColors.themecolor,
-                                onPressed: () {
+                                onPressed: !isButtonDisabled ? () {
                                   onButtonClick();
                                   setState(() {
                                     // istapped = 'Button tapped';
                                   });
-                                },
+                                } : null,
                                 child: Center(
                                   child: Text(
                                     'Sign Up',
@@ -740,6 +742,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (isInternetConnected) {
         // ProgressDialog.showProgressDialog(context);
         try {
+          setState(() {
+            isButtonDisabled = true;
+          });
           var response = await VerifyEmail_repo.verifyEmail(
               _emailID, _UserName, _mobileNumber);
           print(response.data);
@@ -753,9 +758,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             //     backgroundColor: MyColors.themecolor,
             //     textColor: MyColors.textcolor,
             //     fontSize: 12.0);
+
             print("1234546");
             print(response.data);
-
+            setState(() {
+              isButtonDisabled = false;
+            });
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -774,6 +782,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             //     backgroundColor: MyColors.themecolor,
             //     textColor: MyColors.textcolor,
             //     fontSize: 12.0);
+            isButtonDisabled = false;
+
           }
         } catch (e) {
           print(e);
@@ -786,6 +796,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 backgroundColor: MyColors.themecolor,
                 textColor: MyColors.textcolor,
                 fontSize: 12.0);
+            isButtonDisabled = false;
+
           });
         }
       } else {
@@ -797,6 +809,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             backgroundColor: MyColors.themecolor,
             textColor: MyColors.textcolor,
             fontSize: 12.0);
+        setState(() {
+          isButtonDisabled = false;
+
+        });
+
       }
 
       //  Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryList()),);

@@ -17,7 +17,7 @@ class ResetPass_repo {
       'confirmPassword': cinfPass
     };
     return http
-        .post('https://www.prismapp.in/prism/user/forgot-password-change.php',
+        .post('${Constants.BASE_URL}prism/user/forgot-password-change.php',
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {

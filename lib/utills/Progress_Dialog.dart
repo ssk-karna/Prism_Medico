@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 
 class ProgressDialog {
-  static showProgressDialog(BuildContext context) {
+
+  static final ProgressDialog _instance = ProgressDialog._internal();
+  factory ProgressDialog() {
+    return _instance;
+  }
+
+ ProgressDialog._internal();
+
+   void showProgressDialog(BuildContext context) {
+    _showDialog(context);
+  }
+
+  bool _isDialogVisible = false;
+
+   _showDialog(BuildContext context) {
+
+  //  if (!_isDialogVisible) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -10,6 +26,7 @@ class ProgressDialog {
             child: CircularProgressIndicator(),
           );
         });
+ //   }
   }
 
   static showProgressDialogWithMessage(BuildContext context, String message) {
@@ -35,5 +52,15 @@ class ProgressDialog {
             ),
           );
         });
+  }
+  void hideProgressDialog(BuildContext context) {
+    _hideDialog(context);
+  }
+
+  void _hideDialog(BuildContext context) {
+    //if (_isDialogVisible) {
+      _isDialogVisible = false;
+      Navigator.of(context).pop();
+    //}
   }
 }

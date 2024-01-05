@@ -481,6 +481,7 @@ class _HomepageState extends State<Homepage> {
                                     backgroundColor: Colors.white,
                                     maxRadius: 45,
                                     minRadius: 45,
+                                    backgroundImage: AssetImage('assets/images/default_user.png'),
                                     // backgroundImage: NetworkImage(
                                     //   'https://www.prismapp.in/prism/images/user/${userDetails.user_image}',
                                     // ),
@@ -489,9 +490,10 @@ class _HomepageState extends State<Homepage> {
                                     backgroundColor: Colors.transparent,
                                     maxRadius: 45,
                                     minRadius: 45,
-                                    backgroundImage: NetworkImage(
-                                      '${Constants.BASE_URL}prism/images/user/${userDetails.user_image}',
-                                    ),
+                                    backgroundImage: AssetImage('assets/images/default_user.png'),
+                                    // NetworkImage(
+                                    //   '${Constants.BASE_URL}prism/images/user/${userDetails.user_image}',
+                                    // ),
                                   ),
                           ),
                         ),

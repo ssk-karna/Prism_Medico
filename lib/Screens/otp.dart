@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prism_medico/Repo/Registeration.dart';
 import 'package:prism_medico/Repo/verfy_otpRepo.dart';
+import 'package:prism_medico/Repo/verify_EmailRepo.dart';
 import 'package:prism_medico/Screens/homepage.dart';
 import 'package:prism_medico/Screens/reset_Password.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
@@ -9,10 +10,13 @@ import 'package:prism_medico/model/User.dart';
 import 'package:prism_medico/model/latestProduct.dart';
 import 'package:prism_medico/Widgets/Custom_Bakground.dart';
 import 'package:prism_medico/Widgets/Custom_TextField_Shade.dart';
+import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Internet_Connection.dart';
 import 'package:prism_medico/utills/Session_Manager.dart';
 import 'package:prism_medico/Repo/forget_PassRepo.dart';
 import 'package:prism_medico/utills/Progress_Dialog.dart';
+
+import 'login.dart';
 
 class otpVerify extends StatefulWidget {
   List<Latest_Product_model> cart;
@@ -227,7 +231,7 @@ class _otpVerifyState extends State<otpVerify> {
       var isInternetConnected = await InternetUtil.isInternetConnected();
 
       if (isInternetConnected) {
-        ProgressDialog.showProgressDialog(context);
+        ProgressDialog().showProgressDialog(context);
         try {
           var response = await VerifyOTP_repo.verifyotp(widget.email, otptext);
           print(response.data);
@@ -315,7 +319,7 @@ class _otpVerifyState extends State<otpVerify> {
       var isInternetConnected = await InternetUtil.isInternetConnected();
 
       if (isInternetConnected) {
-        ProgressDialog.showProgressDialog(context);
+        ProgressDialog().showProgressDialog(context);
         var response = await RegistrationRepo.registeUserr(
           widget.user.name,
           "abc",
@@ -343,7 +347,7 @@ class _otpVerifyState extends State<otpVerify> {
           _goToHomePage(response.data);
         } else {
           Fluttertoast.showToast(
-              msg: "Something wronge...",
+              msg: "Something wrong...",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 10,
@@ -352,6 +356,8 @@ class _otpVerifyState extends State<otpVerify> {
               fontSize: 12.0);
         }
       }
+
+
     } else {
       Fluttertoast.showToast(
           msg: "No Internet Connection....!!!",
@@ -371,10 +377,9 @@ class _otpVerifyState extends State<otpVerify> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => Homepage(
-                    user: user,
-                    cart: cart,
-                  )));
+              builder: (context) => LoginScreen(
+                cart: cart,
+              )));
     });
   }
 
@@ -388,10 +393,18 @@ class _otpVerifyState extends State<otpVerify> {
       var isInternetConnected = await InternetUtil.isInternetConnected();
 
       if (isInternetConnected) {
-        ProgressDialog.showProgressDialog(context);
+        ProgressDialog().showProgressDialog(context);
         try {
-          var response = await ForgetPass_repo.forgetPass(widget.email);
-          print(response.data);
+          var response = null;
+
+          if(widget.isCommingFromregistration){
+            response = await VerifyEmail_repo.verifyEmail(
+                widget.email, userDetails.name, userDetails.phone);
+          }
+          else {
+            response = await ForgetPass_repo.forgetPass(widget.email);
+            print(response.data);
+          }
 
           if (response.status == 201) {
             // Fluttertoast.showToast(
@@ -435,6 +448,9 @@ class _otpVerifyState extends State<otpVerify> {
                 fontSize: 12.0);
           });
         }
+        setState(() {
+          ProgressDialog().hideProgressDialog(context);
+        });
       } else {
         Fluttertoast.showToast(
             msg: "No Internet Connection....!!!",

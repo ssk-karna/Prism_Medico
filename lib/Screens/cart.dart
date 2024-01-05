@@ -349,7 +349,7 @@ class _CartState extends State<Cart> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Image.network(
-                                        'https://prismapp.in/prism/${item.productImage[0]}',
+                                        '${Constants.BASE_URL}prism/${item.productImage[0]}',
                                         height: 60,
                                       ),
                                       InkWell(
@@ -1130,7 +1130,7 @@ class _CartState extends State<Cart> {
             orderDetail.status,
             orderData,
           );
-          ProgressDialog.showProgressDialog(context);
+         // ProgressDialog.showProgressDialog(context);
           print(response.data);
 
           if (response.status == 201) {

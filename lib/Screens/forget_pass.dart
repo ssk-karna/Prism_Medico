@@ -167,7 +167,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       var isInternetConnected = await InternetUtil.isInternetConnected();
 
       if (isInternetConnected) {
-        ProgressDialog.showProgressDialog(context);
+        //ProgressDialog.showProgressDialog(context);
         try {
           var response = await ForgetPass_repo.forgetPass(_emailID);
           print(response.data);

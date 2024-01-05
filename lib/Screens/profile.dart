@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:prism_medico/Repo/deleteUserRepo.dart';
+import 'package:prism_medico/Screens/login.dart';
 import 'package:prism_medico/utills/Progress_Dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:prism_medico/Repo/getUserbyId.dart';
@@ -240,14 +242,16 @@ class _Profilestate extends State<Profile> {
                               ),
                             )
                           : Container(
-                              child: _imageFilePicked == null
-                                  ? CircleAvatar(
+                              child:
+                             // _imageFilePicked == null ?
+                                    CircleAvatar(
                                       backgroundColor: Colors.white,
                                       maxRadius: 90,
                                       minRadius: 90,
-                                      backgroundImage: NetworkImage(
-                                        'https://www.prismapp.in/prism/images/user/${userDetails.user_image}',
-                                      ),
+                                      // backgroundImage: NetworkImage(
+                                      //   '${Constants.BASE_URL}prism/images/user/${userDetails.user_image}',
+                                      // ),
+                                       backgroundImage: AssetImage('assets/images/default_user.png'),
                                       child: Stack(
                                         children: [
                                           // Align(
@@ -265,38 +269,39 @@ class _Profilestate extends State<Profile> {
                                         ],
                                       ),
                                     )
-                                  : CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      maxRadius: 90,
-                                      minRadius: 90,
-                                      child: Stack(
-                                        children: [
-                                          Center(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              child: Image.file(
-                                                _imageFilePicked,
-                                                height: 180,
-                                                width: 180,
-                                              ),
-                                            ),
-                                          ),
-                                          // Align(
-                                          //   alignment: Alignment.bottomRight,
-                                          //   child: IconButton(
-                                          //       icon: Icon(
-                                          //         Icons.camera_alt,
-                                          //         color: Colors.grey,
-                                          //         size: 30,
-                                          //       ),
-                                          //       onPressed: () {
-                                          //         showAlertDialog(context);
-                                          //       }),
-                                          // )
-                                        ],
-                                      ),
-                                    )),
+                                  // : CircleAvatar(
+                                  //     backgroundColor: Colors.white,
+                                  //     maxRadius: 90,
+                                  //     minRadius: 90,
+                                  //     child: Stack(
+                                  //       children: [
+                                  //         Center(
+                                  //           child: ClipRRect(
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(100),
+                                  //             child: Image.file(
+                                  //               _imageFilePicked,
+                                  //               height: 180,
+                                  //               width: 180,
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //         // Align(
+                                  //         //   alignment: Alignment.bottomRight,
+                                  //         //   child: IconButton(
+                                  //         //       icon: Icon(
+                                  //         //         Icons.camera_alt,
+                                  //         //         color: Colors.grey,
+                                  //         //         size: 30,
+                                  //         //       ),
+                                  //         //       onPressed: () {
+                                  //         //         showAlertDialog(context);
+                                  //         //       }),
+                                  //         // )
+                                  //       ],
+                                  //     ),
+                                  //   )
+               ),
 
                       SizedBox(height: MediaQuery.of(context).size.height / 80),
                       CustomTextFieldWidget(
@@ -837,18 +842,34 @@ class _Profilestate extends State<Profile> {
                       // ),
                       SizedBox(height: MediaQuery.of(context).size.height / 80),
                       Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                              padding: EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                "${userDetails.phone}",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black),
-                              ))),
+
+                          child: CustomTextFieldWidget(
+                            controller: _mobile,
+                            maxline: 10,
+                            counter: "",
+                            keboardtype: TextInputType.number,
+                            inialValue: userDetails.phone,
+                            saved: (String value) {
+                              if (value.isEmpty) {
+                                _mobileNumber = userDetails.phone;
+                              } else {
+                                _mobileNumber = value;
+                              }
+                            },
+                            validator: (String value) {
+                              if (value.isEmpty) {
+                                return 'Please Enter Mobile number';
+                              }
+                              if (value.length < 10) {
+                                return 'Please Enter valid Mobile No';
+                              }
+                              if (value.length > 10) {
+                                return 'Please Enter valid Mobile No';
+                              }
+                              return null;
+                            },
+                          ),
+                      ),
                       // CustomTextFieldWidget(
                       //   controller: _mobile,
                       //   maxline: 10,
@@ -941,6 +962,32 @@ class _Profilestate extends State<Profile> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 15),
+                      FlatButton(
+                        height: 55,
+                        padding: EdgeInsets.all(10),
+                        shape: (RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          //side: BorderSide(color: Colors.red)
+                        )),
+                        textColor: Colors.white,
+                        color: MyColors.themecolor,
+                        onPressed: () {
+                          showDeleteAlert(context);
+                          //setState(() {});
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(left: 15, right: 15),
+                          child: Text(
+                            'Delete Account',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "Poppins-Semibold",
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ))
@@ -954,13 +1001,102 @@ class _Profilestate extends State<Profile> {
     SessionManager.saveUserObject(user);
     userDetails = user;
 
-    // Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => Homepage(
-    //               user: user,
-    //               cart: cart,
-    //             )));.....
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Homepage(
+              user: user,
+              cart: cart,
+            )));
+  }
+
+  void _goToLoginPage() {
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => LoginScreen(
+                  cart: cart,
+                )));
+  }
+  void showDeleteAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Account"),
+          content: Text("Do you want to proceed?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                handleYesClick(context);
+              },
+              child: Text("Yes"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog on "No" click
+              },
+              child: Text("No"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> handleYesClick(BuildContext context) async {
+
+    print("Delete operation in progress...");
+    var isInternetConnected = await InternetUtil.isInternetConnected();
+    if (isInternetConnected) {
+      // ProgressDialog.showProgressDialog(context);
+      try {
+        var response = await deleteUserRepo.deleteUserById(userDetails.id);
+        print("response is $response");
+
+        if (response.status == 201) {
+          Fluttertoast.showToast(
+              msg: "User Deleted Successfully!!!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 10,
+              backgroundColor: MyColors.themecolor,
+              textColor: MyColors.textcolor,
+              fontSize: 12.0);
+
+          _goToLoginPage();
+        } else if (response.status == 402) {
+          Fluttertoast.showToast(
+              msg: response.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 10,
+              backgroundColor: MyColors.themecolor,
+              textColor: MyColors.textcolor,
+              fontSize: 12.0);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Something wrong...",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 10,
+              backgroundColor: MyColors.themecolor,
+              textColor: MyColors.textcolor,
+              fontSize: 12.0);
+        }
+      } catch (error) {
+        print(
+          'API Fail',
+        );
+        print(error);
+      }
+    } else {
+      print(
+        'No Internet Connection!!',
+      );
+    }
+    //Navigator.of(context).pop();
   }
 
   void onButtonClick() async {
@@ -982,7 +1118,8 @@ class _Profilestate extends State<Profile> {
         imageName = _imageFilePicked.toString().substring(72, 131);
       }
       if (img64 == null) {
-        image64 = userDetails.img_url;
+        //image64 = userDetails.img_url;
+        image64 = userDetails.user_image;
       } else {
         image64 = img64;
       }
@@ -998,7 +1135,6 @@ class _Profilestate extends State<Profile> {
       }
       var isInternetConnected = await InternetUtil.isInternetConnected();
       if (isInternetConnected) {
-        ProgressDialog.showProgressDialog(context);
         try {
           var response = await UpdateUserRepo.updateUserr(
             userDetails.id,
@@ -1011,7 +1147,7 @@ class _Profilestate extends State<Profile> {
             _pincode,
             statename,
             _mobileNumber,
-            _emailID,
+            userDetails.email,
             imageName,
             _imageFilePicked1,
             image64,
@@ -1039,7 +1175,7 @@ class _Profilestate extends State<Profile> {
                 fontSize: 12.0);
           } else {
             Fluttertoast.showToast(
-                msg: "Something wronge...",
+                msg: "Something wrong...",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 10,

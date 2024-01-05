@@ -14,7 +14,7 @@ class ForgetPass_repo {
   ) async {
     var body = {'email_id': email};
     return http
-        .post('https://www.prismapp.in/prism/user/send-otp.php',
+        .post('${Constants.BASE_URL}prism/user/send-otp.php',
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {

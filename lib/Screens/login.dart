@@ -16,6 +16,7 @@ import 'package:prism_medico/utills/Internet_Connection.dart';
 import 'package:prism_medico/utills/Progress_Dialog.dart';
 import 'package:prism_medico/utills/Session_Manager.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   final User;
@@ -102,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelText: "Enter Email / Phone no",
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please Enter Mobile no';
+                                return 'Please Enter Email / Mobile no';
                               }
                               else if (value == _mobileNo) {
                                 if (value.length < 10) {
@@ -270,7 +271,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontSize: 10,
                                         ),
                                       ),
-                                      onTap: () {},
+                                      onTap: () {
+                                        _launchURL("https://mktourtravel.com/prism/privacypolicy.html");
+                                      },
                                     ),
                                   ],
                                 ),
@@ -298,7 +301,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontSize: 10,
                                         ),
                                       ),
-                                      onTap: () {},
+                                      onTap: () {
+                                        _launchURL("https://mktourtravel.com/prism/privacypolicy.html");
+                                      },
                                     ),
                                   ],
                                 ),
@@ -351,6 +356,14 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       )),
     );
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void onLoginButtonClick() async {

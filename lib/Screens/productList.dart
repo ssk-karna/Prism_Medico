@@ -11,6 +11,7 @@ import 'package:prism_medico/Screens/profile.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
 import 'package:prism_medico/model/latestProduct.dart';
 import 'package:prism_medico/Repo/getCategoryProduct.dart';
+import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Session_Manager.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -355,7 +356,7 @@ class _ProductListState extends State<ProductList> {
                               Container(
                                 height: MediaQuery.of(context).size.height / 15,
                                 child: Image.network(
-                                    'https://prismapp.in/prism/${items[index].productImage[0]}'),
+                                    '${Constants.BASE_URL}prism/${items[index].productImage[0]}'),
                               ),
                               SizedBox(
                                 width: 8,
@@ -390,6 +391,7 @@ class _ProductListState extends State<ProductList> {
                                             child: Text(
                                               productDetail[index],
                                               softWrap: true,
+                                              maxLines: 3,
                                               style: TextStyle(
                                                   fontFamily: "Poppins-regular",
                                                   fontSize: 10,
@@ -709,7 +711,7 @@ class _ProductListState extends State<ProductList> {
                                                     .height /
                                                 15,
                                             child: Image.network(
-                                                'https://prismapp.in/prism/${items[index].productImage[0]}'),
+                                                '${Constants.BASE_URL}prism/${items[index].productImage[0]}'),
                                           ),
                                           SizedBox(
                                             width: 10,
@@ -771,7 +773,7 @@ class _ProductListState extends State<ProductList> {
                                                   ),
                                                   Row(
                                                     children: [
-                                                      Container(
+                                                      Expanded(
                                                         child: Text(
                                                           items[index]
                                                               .composition,

@@ -15,7 +15,7 @@ class VerifyOTP_repo {
   ) async {
     var body = {'email_id': email, 'otp': otp};
     return http
-        .post('https://www.prismapp.in/prism/user/verify-otp.php',
+        .post('${Constants.BASE_URL}prism/user/verify-otp.php',
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
