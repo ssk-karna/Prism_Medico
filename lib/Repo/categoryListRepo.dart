@@ -9,11 +9,12 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:prism_medico/utills/Utils.dart';
 
 class GetCategoryListRepo {
-  static Future<SuperResponse<List<category_model>>> getCatgories() async {
+  static Future<SuperResponse<List<category_model>>?> getCatgories() async {
     // userDetails = await SessionManager.getUser();
     // selectedCity = await SessionManager.getSelectedCity();
 
     var body = {};
+    Uri url = Uri.parse("${Constants.BASE_URL}prism/category-master/all-category-list.php");
 
     var isInternetConnected = await InternetUtil.isInternetConnected();
 
@@ -21,7 +22,7 @@ class GetCategoryListRepo {
       print('Internet Available');
 
       return http.get(
-        "${Constants.BASE_URL}prism/category-master/all-category-list.php",
+        url,
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       ).then((http.Response response) {
         if (response.statusCode < 200 ||

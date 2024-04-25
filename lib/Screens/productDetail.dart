@@ -11,7 +11,6 @@ import 'package:prism_medico/Screens/notification.dart';
 import 'package:prism_medico/Repo/productRepo.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Session_Manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -24,12 +23,12 @@ class ProductDetail extends StatefulWidget {
   final productName;
 
   ProductDetail(
-      {Key key,
-      this.productDetail,
+      {Key? key,
+      required this.productDetail,
       this.productId,
       this.productName,
-      this.cart,
-      this.commingfromHome})
+      required this.cart,
+      required this.commingfromHome})
       : super(key: key);
   _ProductDetailState createState() => _ProductDetailState(this.cart);
 }
@@ -42,7 +41,7 @@ class _ProductDetailState extends State<ProductDetail> {
   var _qty;
   int counter = 0;
   var quntity;
-  TextEditingController _quntitycontroller;
+  late TextEditingController _quntitycontroller;
 
   @override
   void initState() {
@@ -88,6 +87,7 @@ class _ProductDetailState extends State<ProductDetail> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pop(cart);
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -275,12 +275,12 @@ class _ProductDetailState extends State<ProductDetail> {
                 builder: (context,
                     AsyncSnapshot<SuperResponse<Latest_Product_model>> snap) {
                   if (snap.hasData) {
-                    var list = snap.data.data;
+                    var list = snap.data!.data;
 
                     return ListView.builder(
                       itemCount: 1,
                       itemBuilder: (BuildContext context, int index) {
-                        list.quntity = 0;
+                        list!.quntity = 0;
                         return Column(
                           children: [
                             SizedBox(
@@ -292,12 +292,13 @@ class _ProductDetailState extends State<ProductDetail> {
                               child: CarouselSlider.builder(
                                 itemCount:
                                     widget.productDetail.productImage.length,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 3),
-                                autoPlayAnimationDuration:
-                                    Duration(milliseconds: 800),
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  autoPlayInterval: Duration(seconds: 3),
+                                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                ),
                                 itemBuilder:
-                                    (BuildContext context, int itemIndex) =>
+                                    (BuildContext context, int itemIndex, int pageIndex) =>
                                         Container(
                                   child: Image.network(
                                       'https://prismapp.in/prism/${widget.productDetail.productImage[itemIndex]}'),
@@ -364,7 +365,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                           _quntitycontroller
                                                             ..text = "$_qty",
                                                       onSaved:
-                                                          (String newValue) {
+                                                          (String? newValue) {
                                                         setState(() {
                                                           _qty = newValue;
                                                           _qty =
@@ -402,7 +403,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                           _quntitycontroller
                                                             ..text = "$_qty",
                                                       onSaved:
-                                                          (String newValue) {
+                                                          (String? newValue) {
                                                         setState(() {
                                                           _qty = newValue;
                                                           _qty =
@@ -505,7 +506,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                           _quntitycontroller
                                                             ..text = "$_qty",
                                                       onSaved:
-                                                          (String newValue) {
+                                                          (String? newValue) {
                                                         setState(() {
                                                           _qty = newValue;
                                                           // _qty =
@@ -543,7 +544,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                           _quntitycontroller
                                                             ..text = '$_qty',
                                                       onSaved:
-                                                          (String newValue) {
+                                                          (String? newValue) {
                                                         setState(() {
                                                           _qty = newValue;
                                                           //_qty =
@@ -616,7 +617,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   width:
                                       MediaQuery.of(context).size.width / 1.8,
                                   child: Text(
-                                    list.composition,
+                                    list!.composition,
                                     style: TextStyle(
                                         fontFamily: "Poppins-REGULAR",
                                         fontSize: 12,
@@ -643,85 +644,105 @@ class _ProductDetailState extends State<ProductDetail> {
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height / 80),
-                            FlatButton(
+                            SizedBox(
                               height: 45,
-                              minWidth: MediaQuery.of(context).size.width / 1.5,
-                              padding: EdgeInsets.all(10),
-                              shape: (RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                //side: BorderSide(color: Colors.red)
-                              )),
-                              textColor: Colors.white,
-                              color: MyColors.themecolor,
-                              onPressed: () {
-                                _qty = _quntitycontroller.text.toString();
+                              child: TextButton(
+                                // height: 45,
+                                // minWidth: MediaQuery.of(context).size.width / 1.5,
+                                // padding: EdgeInsets.all(10),
+                                // shape: (RoundedRectangleBorder(
+                                //   borderRadius: BorderRadius.circular(15),
+                                //   //side: BorderSide(color: Colors.red)
+                                // )),
+                                // textColor: Colors.white,
+                                // color: MyColors.themecolor,
+                                style : ButtonStyle(
+                                    minimumSize:  MaterialStateProperty.all<Size>(
+                                      Size(MediaQuery.of(context).size.width / 1.5, 0),
+                                    ),
+                                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      EdgeInsets.all(10),
+                                    ),
+                                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        // Adjust side if needed
+                                        // side: BorderSide(color: Colors.red),
+                                      ),
+                                    ),
+                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                    backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                                ),
+                                onPressed: () {
+                                  _qty = _quntitycontroller.text.toString();
 
-                                widget.productDetail.quntity = int.parse(_qty);
-                                updateQuantityInDatabase(widget.productDetail);
-                                if (cart.length != 0) {
-                                  if (cart[index].id.contains(list.id)) {
-                                    if (widget.productDetail.quntity == 0 ||
-                                        widget.productDetail.quntity == null) {
-                                      Fluttertoast.showToast(
-                                          msg: "Enter Quntity",
-                                          gravity: ToastGravity.CENTER,
-                                          backgroundColor: Colors.lightBlue,
-                                          textColor: MyColors.textcolor,
-                                          toastLength: Toast.LENGTH_LONG);
+                                  widget.productDetail.quntity = int.parse(_qty);
+                                  updateQuantityInDatabase(widget.productDetail);
+                                  if (cart.length != 0) {
+                                    if (cart[index].id.contains(list.id)) {
+                                      if (widget.productDetail.quntity == 0 ||
+                                          widget.productDetail.quntity == null) {
+                                        Fluttertoast.showToast(
+                                            msg: "Enter Quntity",
+                                            gravity: ToastGravity.CENTER,
+                                            backgroundColor: Colors.lightBlue,
+                                            textColor: MyColors.textcolor,
+                                            toastLength: Toast.LENGTH_LONG);
+                                      } else {
+                                        setState(() {
+                                          cart[cart.indexWhere((element) =>
+                                                  element.id == cart[index].id)] =
+                                              cart[index];
+                                        });
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "${list.name} updated into cart...",
+                                            gravity: ToastGravity.CENTER,
+                                            backgroundColor: Colors.lightBlue,
+                                            textColor: MyColors.textcolor,
+                                            toastLength: Toast.LENGTH_LONG);
+                                      }
                                     } else {
                                       setState(() {
-                                        cart[cart.indexWhere((element) =>
-                                                element.id == cart[index].id)] =
-                                            cart[index];
+                                        cart.add(widget.productDetail);
+                                        SessionManager.saveCartObject(cart);
                                       });
                                       Fluttertoast.showToast(
-                                          msg:
-                                              "${list.name} updated into cart...",
+                                          msg: "${list.name} add into cart...",
                                           gravity: ToastGravity.CENTER,
                                           backgroundColor: Colors.lightBlue,
                                           textColor: MyColors.textcolor,
                                           toastLength: Toast.LENGTH_LONG);
                                     }
+                                  } else if (widget.productDetail.quntity == 0 ||
+                                      widget.productDetail.quntity == null) {
+                                    Fluttertoast.showToast(
+                                        msg: "Enter Quntity",
+                                        gravity: ToastGravity.CENTER,
+                                        backgroundColor: Colors.lightBlue,
+                                        textColor: MyColors.textcolor,
+                                        toastLength: Toast.LENGTH_LONG);
                                   } else {
                                     setState(() {
                                       cart.add(widget.productDetail);
                                       SessionManager.saveCartObject(cart);
                                     });
                                     Fluttertoast.showToast(
-                                        msg: "${list.name} add into cart...",
+                                        msg: "${list!.name} added into cart...",
                                         gravity: ToastGravity.CENTER,
                                         backgroundColor: Colors.lightBlue,
                                         textColor: MyColors.textcolor,
                                         toastLength: Toast.LENGTH_LONG);
                                   }
-                                } else if (widget.productDetail.quntity == 0 ||
-                                    widget.productDetail.quntity == null) {
-                                  Fluttertoast.showToast(
-                                      msg: "Enter Quntity",
-                                      gravity: ToastGravity.CENTER,
-                                      backgroundColor: Colors.lightBlue,
-                                      textColor: MyColors.textcolor,
-                                      toastLength: Toast.LENGTH_LONG);
-                                } else {
-                                  setState(() {
-                                    cart.add(widget.productDetail);
-                                    SessionManager.saveCartObject(cart);
-                                  });
-                                  Fluttertoast.showToast(
-                                      msg: "${list.name} added into cart...",
-                                      gravity: ToastGravity.CENTER,
-                                      backgroundColor: Colors.lightBlue,
-                                      textColor: MyColors.textcolor,
-                                      toastLength: Toast.LENGTH_LONG);
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  'Add to cart',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Poppins-Semibold",
-                                    fontSize: 18,
+                                },
+                                child: Center(
+                                  child: Text(
+                                    'Add to cart',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Poppins-Semibold",
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
                               ),

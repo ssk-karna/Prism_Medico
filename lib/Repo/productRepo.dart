@@ -11,8 +11,10 @@ class getProductDetailRepo {
   static Future<SuperResponse<Latest_Product_model>> getProductDetail(
       String productId) async {
     var body = {'product_id': productId};
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/product-master/getProductById.php/$productId');
+
     return http.get(
-      '${Constants.BASE_URL}prism/product-master/getProductById.php/$productId',
+      url,
       headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     ).then((http.Response response) {
       if (response.statusCode < 200 ||
@@ -24,11 +26,11 @@ class getProductDetailRepo {
       Map<String, dynamic> map = json.decode(response.body);
       final data = map['data'];
 
-      if (data != null && data != "") {
+    //  if (data != null && data != "") {
         return SuperResponse.fromJson(map, Latest_Product_model.fromJson(data));
-      } else {
-        return SuperResponse.fromJson(map, null);
-      }
+      // } else {
+      //   return SuperResponse.fromJson(map, null);
+      // }
     });
   }
 }

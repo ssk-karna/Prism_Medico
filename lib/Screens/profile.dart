@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:prism_medico/Repo/deleteUserRepo.dart';
 import 'package:prism_medico/Screens/login.dart';
-import 'package:prism_medico/utills/Progress_Dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:prism_medico/Repo/getUserbyId.dart';
 import 'package:prism_medico/Screens/homepage.dart';
@@ -28,19 +27,19 @@ import 'package:prism_medico/utills/Internet_Connection.dart';
 
 class Profile extends StatefulWidget {
   final List<Latest_Product_model> cart;
-  Profile({this.cart});
+  Profile({ required this.cart});
   _Profilestate createState() => _Profilestate(this.cart);
 }
 
 class _Profilestate extends State<Profile> {
   _Profilestate(this.cart);
   List<Latest_Product_model> cart;
-  User_Registration user;
+  late User_Registration user;
   final _imagePicker = ImagePicker();
   bool _passwordVisible = true;
   final _formKey = GlobalKey<FormState>();
-  File imageFile;
-  String _UserName;
+  late File imageFile;
+  late String _UserName;
   var _emailID;
   var _mobileNumber;
   var _password;
@@ -54,14 +53,14 @@ class _Profilestate extends State<Profile> {
   var _pickedFile;
   var statename;
   var discName;
-  File _imageFilePicked;
-  String _imageFilePicked1;
-  String imageName;
-  String img64;
-  String image64;
-  Uint8List profileImage_Name;
-  Image image;
-  String stateId;
+  late File _imageFilePicked;
+  late String _imageFilePicked1;
+  late String imageName;
+  late String img64;
+  late String image64;
+  late Uint8List profileImage_Name;
+  late Image image;
+  late String stateId;
 
   TextEditingController _name = TextEditingController();
   TextEditingController _pharmacy = TextEditingController();
@@ -79,7 +78,7 @@ class _Profilestate extends State<Profile> {
 
     GetbyUserID.getByuserId(userDetails.id).then((value) {
       setState(() {
-        userDetails = value.data;
+        userDetails = value!.data;
       });
     });
 
@@ -114,10 +113,10 @@ class _Profilestate extends State<Profile> {
   }
 
   _pickImage({
-    @required ImageSource imageSource,
+    required ImageSource imageSource,
   }) async {
     try {
-      var _pickedFile = await _imagePicker.getImage(source: imageSource);
+      var _pickedFile = await _imagePicker.pickImage(source: imageSource);
 
       // _imageFilePicked = _pickedFile.path == null
       //     ? Text("No Image select")
@@ -169,7 +168,7 @@ class _Profilestate extends State<Profile> {
 
     if (status.isGranted) {
       final picker = ImagePicker();
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
         _pickedFile = pickedFile;
@@ -307,8 +306,8 @@ class _Profilestate extends State<Profile> {
                       CustomTextFieldWidget(
                         inialValue: userDetails.name,
                         controller: _name,
-                        saved: (String value) {
-                          if (value.isEmpty) {
+                        saved: (String? value) {
+                          if (value!.isEmpty) {
                             _UserName = userDetails.name;
                           } else {
                             _UserName = value;
@@ -319,8 +318,8 @@ class _Profilestate extends State<Profile> {
                       CustomTextFieldWidget(
                         inialValue: userDetails.pharmacyname,
                         controller: _pharmacy,
-                        saved: (String value) {
-                          if (value.isEmpty) {
+                        saved: (String? value) {
+                          if (value!.isEmpty) {
                             _pharmacyName = userDetails.pharmacyname;
                           } else {
                             _pharmacyName = value;
@@ -332,8 +331,8 @@ class _Profilestate extends State<Profile> {
                       CustomTextFieldWidget(
                         inialValue: userDetails.address,
                         controller: _add,
-                        saved: (String value) {
-                          if (value.isEmpty) {
+                        saved: (String? value) {
+                          if (value!.isEmpty) {
                             _address = userDetails.address;
                           } else {
                             _address = value;
@@ -350,14 +349,15 @@ class _Profilestate extends State<Profile> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(color: Colors.grey)),
-                            child: FutureBuilder(
+                            child: FutureBuilder<
+                                SuperResponse<List<State_Model>>?>(
                                 future: GetStateListRepo.getStateList(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<
-                                            SuperResponse<List<State_Model>>>
+                                            SuperResponse<List<State_Model>>?>
                                         snap) {
                                   if (snap.hasData) {
-                                    var list = snap.data.data;
+                                    var list = snap.data!.data;
                                     return DropdownButton(
                                       hint: Container(
                                           margin: EdgeInsets.only(
@@ -471,16 +471,18 @@ class _Profilestate extends State<Profile> {
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(color: Colors.grey)),
                             child: _state == null
-                                ? FutureBuilder(
+                                ? FutureBuilder<
+                                SuperResponse<
+                                    List<District_Model>>?>(
                                     future: GetDistListRepo.getDistList(
                                         userDetails.state),
                                     builder: (BuildContext context,
                                         AsyncSnapshot<
                                                 SuperResponse<
-                                                    List<District_Model>>>
+                                                    List<District_Model>>?>
                                             snap) {
                                       if (snap.hasData) {
-                                        var list = snap.data.data;
+                                        var list = snap.data!.data;
                                         return DropdownButton(
                                           underline: SizedBox.shrink(),
                                           hint: Container(
@@ -596,15 +598,17 @@ class _Profilestate extends State<Profile> {
                                                 )));
                                       }
                                     })
-                                : FutureBuilder(
+                                : FutureBuilder<
+                                SuperResponse<
+                                    List<District_Model>>?>(
                                     future: GetDistListRepo.getDistList(_state),
                                     builder: (BuildContext context,
                                         AsyncSnapshot<
                                                 SuperResponse<
-                                                    List<District_Model>>>
+                                                    List<District_Model>>?>
                                             snap) {
                                       if (snap.hasData) {
-                                        var list = snap.data.data;
+                                        var list = snap.data!.data;
                                         return DropdownButton(
                                           underline: SizedBox.shrink(),
                                           hint: Container(
@@ -768,15 +772,15 @@ class _Profilestate extends State<Profile> {
                               counter: "",
                               keboardtype: TextInputType.number,
                               inialValue: userDetails.pincode,
-                              saved: (String value) {
-                                if (value.isEmpty) {
+                              saved: (String? value) {
+                                if (value!.isEmpty) {
                                   _pincode = userDetails.pincode;
                                 } else {
                                   _pincode = value;
                                 }
                               },
-                              validator: (String value) {
-                                if (value.isEmpty) {
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
                                   return 'Please Enter Pincode';
                                 }
                                 if (value.length < 6) {
@@ -794,8 +798,8 @@ class _Profilestate extends State<Profile> {
                             child: CustomTextFieldWidget(
                               controller: _city,
                               inialValue: userDetails.city,
-                              saved: (String value) {
-                                if (value.isEmpty) {
+                              saved: (String? value) {
+                                if (value!.isEmpty) {
                                   _city = userDetails.city;
                                 } else {
                                   _City = value;
@@ -849,15 +853,15 @@ class _Profilestate extends State<Profile> {
                             counter: "",
                             keboardtype: TextInputType.number,
                             inialValue: userDetails.phone,
-                            saved: (String value) {
-                              if (value.isEmpty) {
+                            saved: (String? value) {
+                              if (value!.isEmpty) {
                                 _mobileNumber = userDetails.phone;
                               } else {
                                 _mobileNumber = value;
                               }
                             },
-                            validator: (String value) {
-                              if (value.isEmpty) {
+                            validator: (String? value) {
+                              if (value!.isEmpty) {
                                 return 'Please Enter Mobile number';
                               }
                               if (value.length < 10) {
@@ -937,53 +941,88 @@ class _Profilestate extends State<Profile> {
                       //   ),
                       // ),
                       // SizedBox(height: 15),
-                      FlatButton(
+                      SizedBox(
                         height: 55,
-                        padding: EdgeInsets.all(10),
-                        shape: (RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          //side: BorderSide(color: Colors.red)
-                        )),
-                        textColor: Colors.white,
-                        color: MyColors.themecolor,
-                        onPressed: () {
-                          onButtonClick();
-                          setState(() {});
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Text(
-                            'Save Changes',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Poppins-Semibold",
-                              fontSize: 18,
+                        child: TextButton(
+                          // height: 55,
+                          // padding: EdgeInsets.all(10),
+                          // shape: (RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(15),
+                          //   //side: BorderSide(color: Colors.red)
+                          // )),
+                          // textColor: Colors.white,
+                          // color: MyColors.themecolor,
+                          style : ButtonStyle(
+
+                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.all(10),
+                              ),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  // Adjust side if needed
+                                  // side: BorderSide(color: Colors.red),
+                                ),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                          ),
+                          onPressed: () {
+                            onButtonClick();
+                            setState(() {});
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Text(
+                              'Save Changes',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Poppins-Semibold",
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
                       ),
                       SizedBox(height: 15),
-                      FlatButton(
+                      SizedBox(
                         height: 55,
-                        padding: EdgeInsets.all(10),
-                        shape: (RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          //side: BorderSide(color: Colors.red)
-                        )),
-                        textColor: Colors.white,
-                        color: MyColors.themecolor,
-                        onPressed: () {
-                          showDeleteAlert(context);
-                          //setState(() {});
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          child: Text(
-                            'Delete Account',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Poppins-Semibold",
-                              fontSize: 18,
+                        child: TextButton(
+                          //height: 55,
+                          // padding: EdgeInsets.all(10),
+                          // shape: (RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(15),
+                          //   //side: BorderSide(color: Colors.red)
+                          // )),
+                          // textColor: Colors.white,
+                          // color: MyColors.themecolor,
+                          style : ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                EdgeInsets.all(10),
+                              ),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  // Adjust side if needed
+                                  // side: BorderSide(color: Colors.red),
+                                ),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                          ),
+                          onPressed: () {
+                            showDeleteAlert(context);
+                            //setState(() {});
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Text(
+                              'Delete Account',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Poppins-Semibold",
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
@@ -1055,7 +1094,7 @@ class _Profilestate extends State<Profile> {
         var response = await deleteUserRepo.deleteUserById(userDetails.id);
         print("response is $response");
 
-        if (response.status == 201) {
+        if (response!.status == 201) {
           Fluttertoast.showToast(
               msg: "User Deleted Successfully!!!",
               toastLength: Toast.LENGTH_LONG,
@@ -1068,7 +1107,7 @@ class _Profilestate extends State<Profile> {
           _goToLoginPage();
         } else if (response.status == 402) {
           Fluttertoast.showToast(
-              msg: response.message,
+              msg: response.message!,
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 10,
@@ -1100,8 +1139,8 @@ class _Profilestate extends State<Profile> {
   }
 
   void onButtonClick() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       print('form is valid');
       print(_UserName);
       // print(_imageFilePicked);
@@ -1166,7 +1205,7 @@ class _Profilestate extends State<Profile> {
             goToHomePage(response.data);
           } else if (response.status == 402) {
             Fluttertoast.showToast(
-                msg: response.message,
+                msg: response.message!,
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 10,
@@ -1225,16 +1264,33 @@ class _Profilestate extends State<Profile> {
 
   showAlertDialog(BuildContext context) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 5,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: Colors.blue.shade200,
+      // minWidth: MediaQuery.of(context).size.width / 5,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: Colors.blue.shade200,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 5, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade200)
+      ),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -1248,16 +1304,33 @@ class _Profilestate extends State<Profile> {
       ),
     );
 
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 5,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: Colors.blue.shade200,
+      // minWidth: MediaQuery.of(context).size.width / 5,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: Colors.blue.shade200,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 5, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade200)
+      ),
       onPressed: () {
         Navigator.of(context).pop();
       },

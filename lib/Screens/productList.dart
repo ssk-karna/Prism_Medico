@@ -16,7 +16,6 @@ import 'package:prism_medico/utills/Session_Manager.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class ProductList extends StatefulWidget {
   final latest_product_model;
@@ -26,11 +25,11 @@ class ProductList extends StatefulWidget {
   final catName;
 
   ProductList(
-      {Key key,
+      {Key? key,
       this.user,
       this.latest_product_model,
       this.catName,
-      this.cart,
+      required this.cart,
       this.counter})
       : super(key: key);
   _ProductListState createState() => _ProductListState(this.cart);
@@ -40,8 +39,8 @@ class _ProductListState extends State<ProductList> {
   bool stockavailable = true;
   int counter = 0;
   var list;
-  List items;
-  String search;
+  late List items;
+  late String search;
   _ProductListState(this.cart);
   List<Latest_Product_model> cart;
 
@@ -67,7 +66,7 @@ class _ProductListState extends State<ProductList> {
     getCategoryProductListRepo
         .getCatgorieProduct(widget.latest_product_model)
         .then((value) {
-      for (int i = 0; i < value.data.length; i++) {
+      for (int i = 0; i < value!.data.length; i++) {
         items = value.data;
         var list = Latest_Product_model(name: value.data[i].name);
         var _ID = Latest_Product_model(id: value.data[i].id);
@@ -113,6 +112,7 @@ class _ProductListState extends State<ProductList> {
           cart.length;
         });
         Navigator.of(context).pop();
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -299,7 +299,7 @@ class _ProductListState extends State<ProductList> {
                   child: TextFormField(
                       controller: _textController,
                       onSaved: (newValue) {
-                        search = newValue;
+                        search = newValue!;
                       },
                       onFieldSubmitted: (value) {
                         search = value;
@@ -668,15 +668,16 @@ class _ProductListState extends State<ProductList> {
                 ] else ...[
                   Container(
                     height: MediaQuery.of(context).size.height / 1.5,
-                    child: FutureBuilder(
+                    child: FutureBuilder<
+                        SuperResponse<List<Latest_Product_model>>?>(
                       future: getCategoryProductListRepo
                           .getCatgorieProduct(widget.latest_product_model),
                       builder: (BuildContext context,
                           AsyncSnapshot<
-                                  SuperResponse<List<Latest_Product_model>>>
+                                  SuperResponse<List<Latest_Product_model>>?>
                               snap) {
                         if (snap.hasData) {
-                          List list = snap.data.data;
+                          List list = snap.data!.data;
 
                           if (list.length != 0 || list.isNotEmpty) {
                             return ListView.separated(

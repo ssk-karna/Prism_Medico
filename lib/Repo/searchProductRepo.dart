@@ -8,12 +8,14 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:prism_medico/utills/Utils.dart';
 
 class searchProductListRepo {
-  static Future<SuperResponse<List<Latest_Product_model>>> searchProduct(
+  static Future<SuperResponse<List<Latest_Product_model>>?> searchProduct(
       String productName) async {
     // userDetails = await SessionManager.getUser();
     // selectedCity = await SessionManager.getSelectedCity();
 
     var body = {'product_name': productName};
+    Uri url = Uri.parse("${Constants.BASE_URL}prism/product-master/all-product-list.php?key=$productName");
+
 
     var isInternetConnected = await InternetUtil.isInternetConnected();
 
@@ -21,7 +23,7 @@ class searchProductListRepo {
       print('Internet Available');
 
       return http.get(
-        "${Constants.BASE_URL}prism/product-master/all-product-list.php?key=$productName",
+        url,
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       ).then((http.Response response) {
         if (response.statusCode < 200 ||

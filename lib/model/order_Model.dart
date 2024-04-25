@@ -6,8 +6,8 @@ class order_Model {
   var status;
   var status_Id;
   var qunt;
-  List<Order> order;
-  List product;
+  late List<Order>? order = [];
+  late List? product = [];
 
   order_Model(
       {this.id,
@@ -16,10 +16,12 @@ class order_Model {
       this.orderDate,
       this.status,
       this.status_Id,
-      this.order,
+        this.order,
       this.qunt,
-      this.product});
+       this.product});
+
   order_Model.fromJson(Map<dynamic, dynamic> json) {
+
     id = json['order_id'];
     userId = json['order_user_id'];
     orderDate = json['order_date'];

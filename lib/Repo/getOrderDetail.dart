@@ -8,7 +8,7 @@ import 'package:prism_medico/utills/Internet_Connection.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 
 class getorderListRepo {
-  static Future<SuperResponse<List<order_Model>>> getOrderList(
+  static Future<SuperResponse<List<order_Model>>?> getOrderList(
       String userId) async {
     // userDetails = await SessionManager.getUser();
     // selectedCity = await SessionManager.getSelectedCity();
@@ -16,6 +16,7 @@ class getorderListRepo {
     var body = {
       'user_id': userId,
     };
+    Uri url = Uri.parse("${Constants.BASE_URL}prism/order/all-order-list-by-user.php?user_id=$userId");
 
     var isInternetConnected = await InternetUtil.isInternetConnected();
 
@@ -23,7 +24,7 @@ class getorderListRepo {
       print('Internet Available');
 
       return http.get(
-        "${Constants.BASE_URL}prism/order/all-order-list-by-user.php?user_id=$userId",
+        url,
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       ).then((http.Response response) {
         if (response.statusCode < 200 ||

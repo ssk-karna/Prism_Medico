@@ -21,9 +21,11 @@ class Order_repo {
       'status': status,
       'order': orderItems
     };
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/order/order.php');
+
 
     return http
-        .post('${Constants.BASE_URL}prism/order/order.php',
+        .post(url,
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
@@ -37,11 +39,11 @@ class Order_repo {
       Map<dynamic, dynamic> map = json.decode(response.body);
       final data = map['data'];
 
-      if (data != null && data != "") {
+     // if (data != null && data != "") {
         return SuperResponse.fromJson(map, order_Model.fromJson(data));
-      } else {
-        return SuperResponse.fromJson(map, null);
-      }
+      // } else {
+      //   return SuperResponse.fromJson(map, null);
+      // }
     });
   }
 }

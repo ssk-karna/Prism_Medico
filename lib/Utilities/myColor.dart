@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class MyColors {
   static Color themecolor = Color.fromARGB(255, 91, 197, 237);
   static Color textcolor = Color.fromARGB(255, 5, 62, 76);
-  static Color greyButton = Colors.grey[500];
+  static Color? greyButton = Colors.grey[500];
   /*Map<int, Color> themeColor = {
     50: Color.fromRGBO(106, 31, 154, .1),
     100: Color.fromRGBO(106, 31, 154, .2),

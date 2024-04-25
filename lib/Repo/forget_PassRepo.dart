@@ -9,12 +9,14 @@ import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 
 class ForgetPass_repo {
-  static Future<SuperResponse<User_Registration>> forgetPass(
+  static Future<SuperResponse<User_Registration>?> forgetPass(
     String email,
   ) async {
     var body = {'email_id': email};
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/user/send-otp.php');
+
     return http
-        .post('${Constants.BASE_URL}prism/user/send-otp.php',
+        .post(url,
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
@@ -39,12 +41,12 @@ class ForgetPass_repo {
       Map<dynamic, dynamic> map = json.decode(response.body);
       if (map != null) {
         final data = map['data'];
-        if (data != null && data != "") {
+      //  if (data != null && data != "") {
           return SuperResponse.fromJson(map, User_Registration.fromJson(data));
-        } else {
-          print("Data receive null");
-          return SuperResponse.fromJson(map, null);
-        }
+        // } else {
+        //   print("Data receive null");
+        //   return SuperResponse.fromJson(map);
+        // }
       } else {
         print("data null");
       }

@@ -9,15 +9,17 @@ import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 
 class ResetPass_repo {
-  static Future<SuperResponse<User_Registration>> resetPass(
+  static Future<SuperResponse<User_Registration>?> resetPass(
       String email, String newPass, String cinfPass) async {
     var body = {
       'email_id': email,
       'newPassword': newPass,
       'confirmPassword': cinfPass
     };
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/user/forgot-password-change.php');
+
     return http
-        .post('${Constants.BASE_URL}prism/user/forgot-password-change.php',
+        .post(url,
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
@@ -42,12 +44,12 @@ class ResetPass_repo {
       Map<dynamic, dynamic> map = json.decode(response.body);
       if (map != null) {
         final data = map['data'];
-        if (data != null && data != "") {
+     //   if (data != null && data != "") {
           return SuperResponse.fromJson(map, User_Registration.fromJson(data));
-        } else {
-          print("Data receive null");
-          return SuperResponse.fromJson(map, null);
-        }
+        // } else {
+        //   print("Data receive null");
+        //   return SuperResponse.fromJson(map, null);
+        // }
       } else {
         print("data null");
       }

@@ -8,14 +8,15 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:prism_medico/utills/Utils.dart';
 
 class GetStateListRepo {
-  static Future<SuperResponse<List<State_Model>>> getStateList() async {
+  static Future<SuperResponse<List<State_Model>>?> getStateList() async {
     var isInternetConnected = await InternetUtil.isInternetConnected();
+    Uri url = Uri.parse("${Constants.BASE_URL}prism/user/all-state-list.php");
 
     if (isInternetConnected) {
       print('Internet Available');
 
       return http.get(
-        "${Constants.BASE_URL}prism/user/all-state-list.php",
+        url,
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       ).then((http.Response response) {
         if (response.statusCode < 200 ||

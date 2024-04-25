@@ -4,9 +4,9 @@ import 'package:prism_medico/model/order_Model.dart';
 
 User_Registration userDetails = User_Registration();
 Latest_Product_model productDetail = Latest_Product_model();
-List<Latest_Product_model> proList = List<Latest_Product_model>();
+List<Latest_Product_model> proList = [];
 order_Model orderDetail = order_Model();
-List<order_Model> orderDetailS = List<order_Model>();
+List<order_Model> orderDetailS = [];
 
 class Constants {
   static const BASE_URL = 'https://mktourtravel.com/prism/ServerSide/';

@@ -8,11 +8,12 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:prism_medico/utills/Utils.dart';
 
 class GetDistListRepo {
-  static Future<SuperResponse<List<District_Model>>> getDistList(
+  static Future<SuperResponse<List<District_Model>>?> getDistList(
       String stateId) async {
     var body = {
       'state_id': stateId,
     };
+    Uri url = Uri.parse("${Constants.BASE_URL}prism/user/getDistrictByStateId.php/$stateId");
 
     var isInternetConnected = await InternetUtil.isInternetConnected();
 
@@ -20,7 +21,7 @@ class GetDistListRepo {
       print('Internet Available');
 
       return http.get(
-        "${Constants.BASE_URL}prism/user/getDistrictByStateId.php/$stateId",
+        url,
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       ).then((http.Response response) {
         if (response.statusCode < 200 ||

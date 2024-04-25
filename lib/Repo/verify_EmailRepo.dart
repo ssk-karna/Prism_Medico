@@ -10,11 +10,13 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 import 'package:prism_medico/utills/Utils.dart';
 
 class VerifyEmail_repo {
-  static Future<SuperResponse<User_Registration>> verifyEmail(
+  static Future<SuperResponse<User_Registration>?> verifyEmail(
       String email, String userName, String ph) async {
     var body = {'email_id': email, 'user_name': userName, 'phone': ph};
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/user/verify-email.php');
+
     return http
-        .post('${Constants.BASE_URL}prism/user/verify-email.php',
+        .post(url,
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
@@ -40,12 +42,12 @@ class VerifyEmail_repo {
       Map<dynamic, dynamic> map = json.decode(Utils.filterResponseString(response.body));
       if (map != null) {
         final data = map['data'];
-        if (data != null && data != "") {
+     //   if (data != null && data != "") {
           return SuperResponse.fromJson(map, User_Registration.fromJson(data));
-        } else {
-          print("Data receive null");
-          return SuperResponse.fromJson(map, null);
-        }
+        // } else {
+        //   print("Data receive null");
+        //   return SuperResponse.fromJson(map, null);
+        // }
       } else {
         print("data null");
       }

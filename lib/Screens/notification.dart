@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:prism_medico/Repo/getOrderDetail.dart';
-import 'package:prism_medico/Repo/getOrderDetailByID.dart';
 import 'package:prism_medico/Screens/cart.dart';
 import 'package:prism_medico/Screens/homepage.dart';
 import 'package:prism_medico/Screens/order_History.dart';
@@ -17,8 +16,8 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 
 class Notificationscreen extends StatefulWidget {
   final List<Latest_Product_model> cart;
-  final List<order_Model> notify;
-  Notificationscreen({this.cart, this.notify});
+  final List<order_Model>? notify;
+  Notificationscreen({required this.cart, this.notify});
   _NotificationState createState() =>
       _NotificationState(this.cart, this.notify);
 }
@@ -26,9 +25,9 @@ class Notificationscreen extends StatefulWidget {
 class _NotificationState extends State<Notificationscreen> {
   _NotificationState(this.cart, this.notify);
   List<Latest_Product_model> cart;
-  List<order_Model> notify;
-  int total;
-  String orderId;
+  List<order_Model>? notify;
+  late int total;
+  late String orderId;
 
   @override
   void initState() {
@@ -108,7 +107,7 @@ class _NotificationState extends State<Notificationscreen> {
                           width: 40,
                           child: Stack(
                             children: [
-                              cart.length == 0
+                              cart?.length == 0
                                   ? InkWell(
                                       onTap: () {
                                         Fluttertoast.showToast(
@@ -142,7 +141,7 @@ class _NotificationState extends State<Notificationscreen> {
                                             backgroundColor: MyColors.textcolor,
                                             foregroundColor: Colors.white,
                                             child: Text(
-                                              cart.length.toString(),
+                                              cart!.length.toString(),
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 11,
@@ -156,7 +155,7 @@ class _NotificationState extends State<Notificationscreen> {
                           ),
                         ),
                         onTap: () {
-                          if (cart.isNotEmpty)
+                          if (cart!.isNotEmpty)
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => Cart(cart: cart),
@@ -231,12 +230,12 @@ class _NotificationState extends State<Notificationscreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
-          child: FutureBuilder(
+          child: FutureBuilder<SuperResponse<List<order_Model>>?>(
             future: getorderListRepo.getOrderList(userDetails.id),
             builder: (BuildContext context,
-                AsyncSnapshot<SuperResponse<List<order_Model>>> snap) {
+                AsyncSnapshot<SuperResponse<List<order_Model>>?> snap) {
               if (snap.hasData) {
-                var list = snap.data.data;
+                var list = snap.data!.data;
 
                 if (list.isEmpty) {
                   return Center(
@@ -407,11 +406,11 @@ class _NotificationState extends State<Notificationscreen> {
 }
 
 class NotificationsModel {
-  String notificationTitle;
-  String notificationText;
-  String notificationDate;
-  String notificationTime;
-  bool isNotificationRead;
+  String? notificationTitle;
+  String? notificationText;
+  String? notificationDate;
+  String? notificationTime;
+  bool? isNotificationRead;
   NotificationsModel({
     this.notificationTitle,
     this.notificationText,

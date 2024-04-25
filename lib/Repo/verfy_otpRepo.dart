@@ -9,13 +9,15 @@ import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 
 class VerifyOTP_repo {
-  static Future<SuperResponse<User_Registration>> verifyotp(
+  static Future<SuperResponse<User_Registration>?> verifyotp(
     String email,
     String otp,
   ) async {
     var body = {'email_id': email, 'otp': otp};
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/user/verify-otp.php');
+
     return http
-        .post('${Constants.BASE_URL}prism/user/verify-otp.php',
+        .post(url,
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
@@ -42,12 +44,12 @@ class VerifyOTP_repo {
       Map<dynamic, dynamic> map = json.decode(response.body);
       if (map != null) {
         final data = map['data'];
-        if (data != null && data != "") {
+      //  if (data != null && data != "") {
           return SuperResponse.fromJson(map, User_Registration.fromJson(data));
-        } else {
-          print("Data receive null");
-          return SuperResponse.fromJson(map, null);
-        }
+        // } else {
+        //   print("Data receive null");
+        //   return SuperResponse.fromJson(map, null);
+        // }
       } else {
         print("data null");
       }

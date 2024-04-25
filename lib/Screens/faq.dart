@@ -5,7 +5,7 @@ import 'package:prism_medico/model/latestProduct.dart';
 class Faq extends StatefulWidget {
   final List<Latest_Product_model> cart;
 
-  Faq({this.cart});
+  Faq({required this.cart});
   _Faqstate createState() => _Faqstate(this.cart);
 }
 

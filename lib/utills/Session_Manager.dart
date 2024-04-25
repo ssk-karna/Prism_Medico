@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:prism_medico/model/Ctaegory_model.dart';
 import 'package:prism_medico/model/latestProduct.dart';
 import 'package:prism_medico/model/User.dart';
@@ -20,8 +20,15 @@ class SessionManager {
   static Future<User_Registration> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('user')) {
-      Map<String, dynamic> map = jsonDecode(prefs.getString('user'));
-      return User_Registration.fromJson(map);
+      String? jsonString = prefs.getString('user');
+      if(jsonString != null){
+        Map<String, dynamic> map = jsonDecode(jsonString);
+        return User_Registration.fromJson(map);
+      }
+      else{
+        return User_Registration();
+      }
+
     } else
       return User_Registration();
   }
@@ -33,7 +40,7 @@ class SessionManager {
 
   static Future<User_Registration> isUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get('user_id');
+    return prefs.get('user_id') as User_Registration;
   }
 
   static logout() async {
@@ -41,12 +48,12 @@ class SessionManager {
     preferences.clear();
   }
 
-  static Future<String> getDeviceId() async {
+  static Future<String?> getDeviceId() async {
     final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
         var build = await deviceInfoPlugin.androidInfo;
-        return build.androidId; //UUID for Android
+        return build.id; //UUID for Android
       } else if (Platform.isIOS) {
         var data = await deviceInfoPlugin.iosInfo;
         return data.identifierForVendor; //UUID for iOS
@@ -67,14 +74,15 @@ class SessionManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('notifications')) {
       print('Category List from Prefernce : ${prefs.getString('catgorylist')}');
-      Iterable data = jsonDecode(prefs.getString('catgorylist'));
-      List<order_Model> categoryList =
-          data.map((dynamic ts) => order_Model.fromJson(ts)).toList();
+      String? jsonString = prefs.getString('catgorylist');
+        Iterable data = jsonDecode(jsonString!);
+        List<order_Model> categoryList =
+        data.map((dynamic ts) => order_Model.fromJson(ts)).toList();
+        return categoryList;
+      } else
+        return [] as List<order_Model>;
+    }
 
-      return categoryList;
-    } else
-      return List<order_Model>();
-  }
 
   static saveCategoryListObject(List<category_model> categoryList) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -86,26 +94,28 @@ class SessionManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('catgorylist')) {
       print('Category List from Prefernce : ${prefs.getString('catgorylist')}');
-      Iterable data = jsonDecode(prefs.getString('catgorylist'));
+      String? jsonString = prefs.getString('catgorylist');
+      Iterable data = jsonDecode(jsonString!);
       List<category_model> categoryList =
           data.map((dynamic ts) => category_model.fromJson(ts)).toList();
 
       return categoryList;
     } else
-      return List<category_model>();
+      return [] as List<category_model>;
   }
 
   static Future<List<Latest_Product_model>> getProductList1() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('catgorylist')) {
       print('Category List from Prefernce : ${prefs.getString('catgorylist')}');
-      Iterable data = jsonDecode(prefs.getString('catgorylist'));
+      String? jsonString = prefs.getString('catgorylist');
+      Iterable data = jsonDecode(jsonString!);
       List<Latest_Product_model> categoryList =
           data.map((dynamic ts) => Latest_Product_model.fromJson(ts)).toList();
 
       return categoryList;
     } else
-      return List<Latest_Product_model>();
+      return [] as List<Latest_Product_model>;
   }
 
   static saveProductListObject(List<Latest_Product_model> productList) async {
@@ -118,7 +128,8 @@ class SessionManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('productList')) {
       print('Category List from Prefernce : ${prefs.getString('productList')}');
-      Iterable data = jsonDecode(prefs.getString('productlist'));
+      String? jsonString = prefs.getString('productList');
+      Iterable data = jsonDecode(jsonString!);
       List<Latest_Product_model> productList =
           data.map((dynamic ts) => Latest_Product_model.fromJson(ts)).toList();
 
@@ -126,7 +137,7 @@ class SessionManager {
 //      return User.fromJson(map);
       return productList;
     } else
-      return List<Latest_Product_model>();
+      return [] as List<Latest_Product_model>;
   }
 
   static saveCartObject(List<Latest_Product_model> cartList) async {
@@ -140,13 +151,14 @@ class SessionManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('cartList')) {
       print('cart List from Prefernce : ${prefs.getString('cartList')}');
-      Iterable data = jsonDecode(prefs.getString('cartlist'));
+      String? jsonString = prefs.getString('cartList');
+      Iterable data = jsonDecode(jsonString!);
       List<Latest_Product_model> carttList =
           data.map((dynamic ts) => Latest_Product_model.fromJson(ts)).toList();
 
       return carttList;
     } else
-      return List<Latest_Product_model>();
+      return [] as List<Latest_Product_model>;
   }
 }
 

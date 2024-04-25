@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextFieldWidget extends StatelessWidget {
   final controller;
   final labelText;
-  final validator;
+  final String? Function(String?)? validator;
   final keboardtype;
   final icon;
   final saved;
@@ -14,7 +14,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   final action;
   final change;
   const CustomTextFieldWidget(
-      {Key key,
+      {Key? key,
       this.saved,
       this.controller,
       this.labelText,

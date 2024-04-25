@@ -21,7 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 class LoginScreen extends StatefulWidget {
   final User;
   final List<Latest_Product_model> cart;
-  LoginScreen({Key key, this.User, this.cart}) : super(key: key);
+  LoginScreen({Key? key, this.User, required this.cart}) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState(this.cart);
 }
@@ -33,10 +33,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   bool _passwordVisible = true;
-  String _mobileNo;
-  String _password;
-  String email;
-  String loginData;
+  late String _mobileNo = '';
+  late String _password= '';
+  late String email= '';
+  late String loginData= '';
   _LoginScreenState(this.cart);
   List<Latest_Product_model> cart;
   bool _isUserInteracted = false;
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _validateInput(String value) {
     if (!_isUserInteracted) {
-      return null; // No validation error until the user interacts
+      return "null"; // No validation error until the user interacts
     }
 
     if (value.isEmpty) {
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Additional custom validation logic if needed
 
-    return null; // No validation error
+    return "null"; // No validation error
   }
 
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomTextFieldWidget(
                             labelText: "Enter Email / Phone no",
                             validator: (value) {
-                              if (value.isEmpty) {
+                              if (value!.isEmpty) {
                                 return 'Please Enter Email / Mobile no';
                               }
                               else if (value == _mobileNo) {
@@ -142,13 +142,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: TextFormField(
                             keyboardType: TextInputType.text,
                             validator: (value) {
-                              if (value.isEmpty) {
+                              if (value!.isEmpty) {
                                 return 'Please Enter Password';
                               }
                               return null;
                             },
                             onSaved: (value) {
-                              _password = value;
+                              _password = value!;
                             },
                             // controller: _userPasswordController,
                             obscureText:
@@ -214,29 +214,51 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        FlatButton(
+                        SizedBox(
                           height: 45,
-                          minWidth: MediaQuery.of(context).size.width / 2,
-                          padding: EdgeInsets.all(10),
-                          shape: (RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            //side: BorderSide(color: Colors.red)
-                          )),
-                          textColor: Colors.white,
-                          color: MyColors.themecolor,
-                          onPressed: () {
-                            onLoginButtonClick();
-                            setState(() {
-                              // istapped = 'Button tapped';
-                            });
-                          },
-                          child: Center(
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: "Poppins-Semibold",
-                                fontSize: 18,
+                          child: TextButton(
+                            // height: 45,
+                            // minWidth: MediaQuery.of(context).size.width / 2,
+                            // padding: EdgeInsets.all(10),
+                            // shape: (RoundedRectangleBorder(
+                            //   borderRadius: BorderRadius.circular(15),
+                            //   //side: BorderSide(color: Colors.red)
+                            // )),
+                            // textColor: Colors.white,
+                            // color: MyColors.themecolor,
+                            style : ButtonStyle(
+
+                                minimumSize:  MaterialStateProperty.all<Size>(
+                                  Size(MediaQuery.of(context).size.width / 2, 0),
+                                ),
+                                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                  EdgeInsets.all(10),
+                                ),
+                                shape: MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    // Adjust side if needed
+                                    // side: BorderSide(color: Colors.red),
+                                  ),
+                                ),
+                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                            ),
+
+                            onPressed: () {
+                              onLoginButtonClick();
+                              setState(() {
+                                // istapped = 'Button tapped';
+                              });
+                            },
+                            child: Center(
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Poppins-Semibold",
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
@@ -377,93 +399,99 @@ class _LoginScreenState extends State<LoginScreen> {
       loginemailorph = email;
     }
 
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      print('form is valid');
+    if(_formKey.currentState != null) {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        print('form is valid');
 
-      var isInternetConnected = await InternetUtil.isInternetConnected();
+        var isInternetConnected = await InternetUtil.isInternetConnected();
 
-      if (isInternetConnected) {
-        // ProgressDialog.showProgressDialog(context);
-        try {
-          var response = await Login_repo.Login(loginData, _password);
-          print(response);
-          if (response == null) {
-            print("Data is NULL.....1");
+        if (isInternetConnected) {
+          // ProgressDialog.showProgressDialog(context);
+          try {
+            var response = await Login_repo.Login(loginData, _password);
+            print(response);
+            if (response == null) {
+              print("Data is NULL.....1");
+            }
+
+            if (response!.status == 200) {
+              Fluttertoast.showToast(
+                  msg: "Login Succesfull",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 10,
+                  backgroundColor: MyColors.themecolor,
+                  textColor: MyColors.textcolor,
+                  fontSize: 12.0);
+
+              _goToHomePage(response.data);
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Mobile & Password Wrong...",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 10,
+                  backgroundColor: MyColors.themecolor,
+                  textColor: MyColors.textcolor,
+                  fontSize: 12.0);
+              Navigator.pop(context);
+            }
+          } catch (e) {
+            print(e);
+            setState(() {
+              Fluttertoast.showToast(
+                  msg: "Something Wrong, Please Try Again....!!!",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 10,
+                  backgroundColor: MyColors.themecolor,
+                  textColor: MyColors.textcolor,
+                  fontSize: 12.0);
+            });
           }
+          // if (response.status == 404) {
+          //   //TODO show error
 
-          if (response.status == 200) {
-            Fluttertoast.showToast(
-                msg: "Login Succesfull",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 10,
-                backgroundColor: MyColors.themecolor,
-                textColor: MyColors.textcolor,
-                fontSize: 12.0);
+          //   if (response.data == null) {
+          //     Fluttertoast.showToast(
+          //         msg: "You are not register User.Please Register First.",
+          //         toastLength: Toast.LENGTH_LONG,
+          //         gravity: ToastGravity.CENTER,
+          //         timeInSecForIosWeb: 10,
+          //         backgroundColor: MyColors.themecolor,
+          //         textColor: MyColors.textcolor,
+          //         fontSize: 12.0);
 
-            _goToHomePage(response.data);
-          } else {
-            Fluttertoast.showToast(
-                msg: "Mobile & Password Wrong...",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 10,
-                backgroundColor: MyColors.themecolor,
-                textColor: MyColors.textcolor,
-                fontSize: 12.0);
-            Navigator.pop(context);
-          }
-        } catch (e) {
-          print(e);
-          setState(() {
-            Fluttertoast.showToast(
-                msg: "Something Wrong, Please Try Again....!!!",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 10,
-                backgroundColor: MyColors.themecolor,
-                textColor: MyColors.textcolor,
-                fontSize: 12.0);
-          });
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => RegisterScreen()),
+          //     );
+          //   } else {}
+          // }
+        } else {
+          Fluttertoast.showToast(
+              msg: "No Internet Connection....!!!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 10,
+              backgroundColor: MyColors.themecolor,
+              textColor: MyColors.textcolor,
+              fontSize: 12.0);
         }
-        // if (response.status == 404) {
-        //   //TODO show error
 
-        //   if (response.data == null) {
-        //     Fluttertoast.showToast(
-        //         msg: "You are not register User.Please Register First.",
-        //         toastLength: Toast.LENGTH_LONG,
-        //         gravity: ToastGravity.CENTER,
-        //         timeInSecForIosWeb: 10,
-        //         backgroundColor: MyColors.themecolor,
-        //         textColor: MyColors.textcolor,
-        //         fontSize: 12.0);
-
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => RegisterScreen()),
-        //     );
-        //   } else {}
-        // }
+        //  Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryList()),);
       } else {
-        Fluttertoast.showToast(
-            msg: "No Internet Connection....!!!",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 10,
-            backgroundColor: MyColors.themecolor,
-            textColor: MyColors.textcolor,
-            fontSize: 12.0);
+        setState(() {
+          // FocusScope.of(context).unfocus();
+          _autoValidate = true;
+        });
       }
-
-      //  Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryList()),);
-    } else {
-      setState(() {
-        // FocusScope.of(context).unfocus();
-        _autoValidate = true;
-      });
     }
+    else
+      {
+       // _formKey is null
+      }
   }
 
   void _goToHomePage(User_Registration user) {

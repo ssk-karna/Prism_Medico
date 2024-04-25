@@ -9,14 +9,12 @@ import 'package:prism_medico/Screens/add_Address.dart';
 import 'package:prism_medico/Screens/allProduct.dart';
 import 'package:prism_medico/Screens/cart.dart';
 import 'package:prism_medico/Screens/faq.dart';
-import 'package:prism_medico/Screens/newsDetail.dart';
 import 'package:prism_medico/Screens/notification.dart';
 import 'package:prism_medico/Screens/order_History.dart';
 import 'package:prism_medico/Screens/productDetail.dart';
 import 'package:prism_medico/Screens/productList.dart';
 import 'package:prism_medico/Screens/profile.dart';
 import 'package:prism_medico/Screens/login.dart';
-import 'package:prism_medico/Screens/universalSearch.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
 import 'package:prism_medico/model/Ctaegory_model.dart';
 import 'package:prism_medico/model/latestProduct.dart';
@@ -32,18 +30,18 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Homepage extends StatefulWidget {
-  final User_Registration user;
-  final bool isComeFromLogin;
+  final User_Registration? user;
+  final bool? isComeFromLogin;
   final productListr;
   final List<Latest_Product_model> cart;
-  final List<order_Model> notify;
+  final List<order_Model>? notify;
   Homepage(
-      {Key key,
+      {Key? key,
       this.productListr,
-      this.user,
-      this.isComeFromLogin,
-      this.cart,
-      this.notify})
+       this.user,
+       this.isComeFromLogin,
+      required this.cart,
+       this.notify})
       : super(key: key);
 
   _HomepageState createState() => _HomepageState(this.cart, this.notify);
@@ -52,10 +50,10 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   _HomepageState(this.cart, this.notify);
   List<Latest_Product_model> cart;
-  List<order_Model> notify;
+  List<order_Model>? notify;
   Color appTheme = Color.fromARGB(255, 91, 197, 237);
   var isInternetConnected = InternetUtil.isInternetConnected();
-  SharedPreferences sharedPreferences;
+  late SharedPreferences sharedPreferences;
   //var userDetails;
   var user;
   var statelist;
@@ -146,11 +144,11 @@ class _HomepageState extends State<Homepage> {
     SessionManager.getUser().then((value) {
       if (value == null) {
         setState(() {
-          return userDetails == widget.user;
+           userDetails = widget.user!;
         });
       } else {
         setState(() {
-          return userDetails = value;
+           userDetails = value;
         });
       }
     });
@@ -782,14 +780,15 @@ class _HomepageState extends State<Homepage> {
                               width: MediaQuery.of(context).size.width,
                               // padding: EdgeInsets.all(8.0),
 
-                              child: FutureBuilder(
+                              child: FutureBuilder<
+                                  SuperResponse<List<category_model>>?>(
                                 future: GetCategoryListRepo.getCatgories(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<
-                                            SuperResponse<List<category_model>>>
+                                            SuperResponse<List<category_model>>?>
                                         snap) {
                                   if (snap.hasData) {
-                                    var list = snap.data.data;
+                                    var list = snap.data?.data;
                                     return GridView(
                                       shrinkWrap: true,
                                       gridDelegate:
@@ -798,7 +797,7 @@ class _HomepageState extends State<Homepage> {
                                               crossAxisSpacing: 10.0,
                                               mainAxisSpacing: 10.0),
                                       children: <Widget>[
-                                        ...list.map((e) => InkWell(
+                                        ...list!.map((e) => InkWell(
                                               onTap: () {
                                                 Future.delayed(
                                                     Duration(seconds: 2), () {
@@ -884,29 +883,49 @@ class _HomepageState extends State<Homepage> {
                               )),
                           SizedBox(
                               height: MediaQuery.of(context).size.height / 70),
-                          FlatButton(
+                          SizedBox(
                             height: 45,
-                            minWidth: MediaQuery.of(context).size.width / 1.5,
-                            padding: EdgeInsets.all(5),
-                            shape: (RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              //side: BorderSide(color: Colors.red)
-                            )),
-                            textColor: Colors.white,
-                            color: MyColors.themecolor,
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => OrderHistory(
-                                        cart: cart,
-                                      )));
-                            },
-                            child: Center(
-                              child: Text(
-                                'Order History',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Poppins-Semibold",
-                                  fontSize: 18,
+                            child: TextButton(
+                              // height: 45,
+                              // minWidth: MediaQuery.of(context).size.width / 1.5,
+                              // padding: EdgeInsets.all(5),
+                              // shape: (RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(15),
+                              //   //side: BorderSide(color: Colors.red)
+                              // )),
+                              // textColor: Colors.white,
+                              // color: MyColors.themecolor,
+                              style : ButtonStyle(
+                                  minimumSize:  MaterialStateProperty.all<Size>(
+                                    Size(MediaQuery.of(context).size.width / 1.5, 0),
+                                  ),
+                                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                    EdgeInsets.all(5),
+                                  ),
+                                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      // Adjust side if needed
+                                      // side: BorderSide(color: Colors.red),
+                                    ),
+                                  ),
+                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                  backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => OrderHistory(
+                                          cart: cart,
+                                        )));
+                              },
+                              child: Center(
+                                child: Text(
+                                  'Order History',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Poppins-Semibold",
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
@@ -930,21 +949,23 @@ class _HomepageState extends State<Homepage> {
                           Container(
                               height: MediaQuery.of(context).size.height / 4.2,
                               width: MediaQuery.of(context).size.width,
-                              child: FutureBuilder(
+                              child: FutureBuilder<
+                                  SuperResponse<
+                                      List<Latest_Product_model>>?>(
                                 future: latestProductListRepo.getProduct(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<
                                             SuperResponse<
-                                                List<Latest_Product_model>>>
+                                                List<Latest_Product_model>>?>
                                         snap) {
                                   if (snap.hasData) {
-                                    var list = snap.data.data;
-                                    if (snap.data.data != null) {
+                                    var list = snap.data?.data;
+                                    if (snap.data?.data != null) {
                                       return ListView(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
                                         children: <Widget>[
-                                          ...list.map((e) => (InkWell(
+                                          ...list!.map((e) => (InkWell(
                                                 onTap: () {
                                                   Navigator.push(
                                                       context,
@@ -1083,21 +1104,22 @@ class _HomepageState extends State<Homepage> {
                           Container(
                               height: MediaQuery.of(context).size.height / 4.2,
                               width: MediaQuery.of(context).size.width,
-                              child: FutureBuilder(
+                              child: FutureBuilder<SuperResponse<
+                                      List<Latest_Product_model>>?>(
                                 future: bestProductListRepo.getbestProduct(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<
                                             SuperResponse<
-                                                List<Latest_Product_model>>>
+                                                List<Latest_Product_model>>?>
                                         snap) {
                                   if (snap.hasData) {
-                                    var list = snap.data.data;
-                                    if (snap.data.data != null) {
+                                    var list = snap.data?.data;
+                                    if (snap.data?.data != null) {
                                       return ListView(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
                                         children: <Widget>[
-                                          ...list.map((e) => (InkWell(
+                                          ...list!.map((e) => (InkWell(
                                                 onTap: () {
                                                   Navigator.push(
                                                       context,
@@ -1314,16 +1336,33 @@ class _HomepageState extends State<Homepage> {
 
   showConfirm(BuildContext context) {
     // set up the buttons
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 5,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: MyColors.themecolor,
+      // minWidth: MediaQuery.of(context).size.width / 5,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: MyColors.themecolor,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 5, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+      ),
       onPressed: () {
         SessionManager.logout();
         Navigator.pushReplacement(
@@ -1343,16 +1382,33 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
     );
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 5,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: Colors.grey,
+      // minWidth: MediaQuery.of(context).size.width / 5,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: Colors.grey,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 5, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.grey)
+      ),
       onPressed: () {
         Navigator.of(context).pop();
       },

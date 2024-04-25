@@ -23,7 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   final List<Latest_Product_model> cart;
-  RegisterScreen({this.cart});
+  RegisterScreen({required this.cart});
   @override
   _RegisterScreenState createState() => _RegisterScreenState(this.cart);
 }
@@ -33,27 +33,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
   List<Latest_Product_model> cart;
   final _focusNode = FocusNode();
 
-  SharedPreferences sharedPreferences;
+  late SharedPreferences sharedPreferences;
   bool _passwordVisible = true;
   bool isButtonDisabled = false;
 
-  String _selectedstates;
-  String _selectedDist;
+  late String? _selectedstates = '';
+  late String? _selectedDist = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
 
-  String _UserName;
+  late String _UserName= '';
   var _emailID;
-  String _mobileNumber;
-  String _password;
-  String _pharmacyName;
-  String _City;
-  String _Disct;
-  String _address;
-  String _state;
-  String _pincode;
-  String _fullname;
+  late String _mobileNumber= '';
+  late String _password= '';
+  late String _pharmacyName= '';
+  late String _City= '';
+  late String _Disct= '';
+  late String _address= '';
+  late String _state= '';
+  late String _pincode= '';
+  late String _fullname= '';
   var stateId;
   var distrId;
 
@@ -62,8 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController address = TextEditingController();
   TextEditingController pincode = TextEditingController();
 
-  FocusNode addressNode;
-  FocusNode pincodeNode;
+  late FocusNode addressNode;
+  late FocusNode pincodeNode;
   @override
   void initState() {
     _passwordVisible = false;
@@ -130,8 +130,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             children: [
                               CustomTextFieldWidget(
                                 labelText: "Name",
-                                validator: (String value) {
-                                  if (value.isEmpty) {
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
                                     return 'Please Enter Name';
                                   }
                                   return null;
@@ -145,8 +145,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       MediaQuery.of(context).size.height / 80),
                               CustomTextFieldWidget(
                                 labelText: "Pharmacy Name",
-                                validator: (String value) {
-                                  if (value.isEmpty) {
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
                                     return 'Please Enter Pharmacy Name';
                                   }
                                   return null;
@@ -161,8 +161,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               CustomTextFieldWidget(
                                 labelText: "Address",
                                 focusNode: addressNode,
-                                validator: (String value) {
-                                  if (value.isEmpty) {
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
                                     return 'Please Enter Address';
                                   }
                                   return null;
@@ -194,15 +194,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(color: Colors.grey)),
-                                    child: FutureBuilder(
+                                    child: FutureBuilder<
+                                        SuperResponse<
+                                            List<State_Model>>?>(
                                         future: GetStateListRepo.getStateList(),
                                         builder: (BuildContext context,
                                             AsyncSnapshot<
                                                     SuperResponse<
-                                                        List<State_Model>>>
+                                                        List<State_Model>>?>
                                                 snap) {
                                           if (snap.hasData) {
-                                            var list = snap.data.data;
+                                            var list = snap.data!.data;
 
                                             return DropdownButton(
                                               hint: Container(
@@ -222,7 +224,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   : _selectedstates,
                                               onChanged: (newValue) {
                                                 setState(() {
-                                                  _selectedstates = newValue;
+                                                  if (newValue != null) {
+                                                    _selectedstates = newValue.toString(); // Explicitly convert to String
+                                                  } else {
+                                                    _selectedstates = null; // Handle null case
+                                                  }
 
                                                   _selectedDist = null;
                                                   //  stateId = newValue.id;
@@ -316,16 +322,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(color: Colors.grey)),
-                                    child: FutureBuilder(
+                                    child: FutureBuilder<
+                                        SuperResponse<
+                                            List<District_Model>>?>(
                                         future: GetDistListRepo.getDistList(
-                                            _selectedstates),
+                                            _selectedstates!),
                                         builder: (BuildContext context,
                                             AsyncSnapshot<
                                                     SuperResponse<
-                                                        List<District_Model>>>
+                                                        List<District_Model>>?>
                                                 snap) {
                                           if (snap.hasData) {
-                                            var list = snap.data.data;
+                                            var list = snap.data!.data;
                                             return DropdownButton(
                                               underline: SizedBox.shrink(),
                                               hint: Container(
@@ -346,7 +354,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   : _selectedDist,
                                               onChanged: (newValue) {
                                                 setState(() {
-                                                  _selectedDist = newValue;
+                                                  if (newValue != null) {
+                                                    _selectedDist = newValue.toString(); // Explicitly convert to String
+                                                  } else {
+                                                    _selectedDist = null; // Handle null case
+                                                  }
                                                 });
                                               },
                                               items: list.map((Disct) {
@@ -439,8 +451,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       maxline: 6,
                                       counter: "",
                                       keboardtype: TextInputType.number,
-                                      validator: (String value) {
-                                        if (value.isEmpty) {
+                                      validator: (String? value) {
+                                        if (value!.isEmpty) {
                                           return 'Please Enter Pincode';
                                         }
                                         if (value.length < 6) {
@@ -466,8 +478,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     //     border: Border.all(color: Colors.grey)),
                                     child: CustomTextFieldWidget(
                                       labelText: "City",
-                                      validator: (String value) {
-                                        if (value.isEmpty) {
+                                      validator: (String? value) {
+                                        if (value!.isEmpty) {
                                           return 'Please Enter City';
                                         }
                                         return null;
@@ -484,8 +496,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       MediaQuery.of(context).size.height / 80),
                               CustomTextFieldWidget(
                                 labelText: "Email ",
-                                validator: (String value) {
-                                  if (value.isEmpty) {
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
                                     return 'Please Enter Email.';
                                   }
                                   if (!value.contains("@")) {
@@ -509,8 +521,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 maxline: 10,
                                 counter: "",
                                 keboardtype: TextInputType.number,
-                                validator: (String value) {
-                                  if (value.isEmpty) {
+                                validator: (String? value) {
+                                  if (value!.isEmpty) {
                                     return 'Please Enter Mobile no.';
                                   }
                                   if (value.length < 10) {
@@ -532,14 +544,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 height: MediaQuery.of(context).size.height / 15,
                                 child: TextFormField(
                                   keyboardType: TextInputType.text,
-                                  validator: (String value) {
-                                    if (value.isEmpty) {
+                                  validator: (String? value) {
+                                    if (value!.isEmpty) {
                                       return 'Please Enter Password';
                                     }
                                     return null;
                                   },
                                   onSaved: (val) {
-                                    _password = val;
+                                    _password = val!;
                                   },
                                   obscureText:
                                       !_passwordVisible, //This will obscure text dynamically
@@ -576,28 +588,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               SizedBox(height: 15),
-                              FlatButton(
+                              SizedBox(
                                 height: 50,
-                                padding: EdgeInsets.all(10),
-                                shape: (RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  //side: BorderSide(color: Colors.red)
-                                )),
-                                textColor: Colors.white,
-                                color: MyColors.themecolor,
-                                onPressed: !isButtonDisabled ? () {
-                                  onButtonClick();
-                                  setState(() {
-                                    // istapped = 'Button tapped';
-                                  });
-                                } : null,
-                                child: Center(
-                                  child: Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: "Poppins-Semibold",
-                                      fontSize: 18,
+                                child: TextButton(
+                                  //height: 50,
+                                  // padding: EdgeInsets.all(10),
+                                  // shape: (RoundedRectangleBorder(
+                                  //   borderRadius: BorderRadius.circular(15),
+                                  //   //side: BorderSide(color: Colors.red)
+                                  // )),
+                                  // textColor: Colors.white,
+                                  // color: MyColors.themecolor,
+                                  style : ButtonStyle(
+                                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                        EdgeInsets.all(10),
+                                      ),
+                                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                          // Adjust side if needed
+                                          // side: BorderSide(color: Colors.red),
+                                        ),
+                                      ),
+                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                      backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                                  ),
+                                  onPressed: !isButtonDisabled ? () {
+                                    onButtonClick();
+                                    setState(() {
+                                      // istapped = 'Button tapped';
+                                    });
+                                  } : null,
+                                  child: Center(
+                                    child: Text(
+                                      'Sign Up',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Poppins-Semibold",
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -721,8 +750,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     FocusScope.of(context).unfocus();
     String registration;
 
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       print('form is valid');
       userDetails.name = _UserName;
       userDetails.email = _emailID;
@@ -747,7 +776,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           });
           var response = await VerifyEmail_repo.verifyEmail(
               _emailID, _UserName, _mobileNumber);
-          print(response.data);
+          print(response!.data);
 
           if (response.status == 201) {
             // Fluttertoast.showToast(

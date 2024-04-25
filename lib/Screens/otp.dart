@@ -20,10 +20,10 @@ import 'login.dart';
 
 class otpVerify extends StatefulWidget {
   List<Latest_Product_model> cart;
-  final User_Registration user;
+  final User_Registration? user;
   final email;
   bool isCommingFromregistration;
-  otpVerify({this.cart, this.email, this.user, this.isCommingFromregistration});
+  otpVerify({required this.cart, this.email, this.user, required this.isCommingFromregistration});
   @override
   _otpVerifyState createState() => _otpVerifyState(this.cart);
 }
@@ -31,8 +31,8 @@ class otpVerify extends StatefulWidget {
 class _otpVerifyState extends State<otpVerify> {
   _otpVerifyState(this.cart);
   List<Latest_Product_model> cart;
-  String otptext;
-  String registration;
+  late String otptext;
+  late String registration;
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
 
@@ -178,16 +178,33 @@ class _otpVerifyState extends State<otpVerify> {
                       height: MediaQuery.of(context).size.height / 30,
                     ),
 
-                    FlatButton(
+                    TextButton(
                       // height: ,
-                      minWidth: MediaQuery.of(context).size.width / 3,
-                      padding: EdgeInsets.all(10),
-                      shape: (RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        //side: BorderSide(color: Colors.red)
-                      )),
-                      textColor: Colors.white,
-                      color: MyColors.themecolor,
+                      // minWidth: MediaQuery.of(context).size.width / 3,
+                      // padding: EdgeInsets.all(10),
+                      // shape: (RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(15),
+                      //   //side: BorderSide(color: Colors.red)
+                      // )),
+                      // textColor: Colors.white,
+                      // color: MyColors.themecolor,
+                      style : ButtonStyle(
+                          minimumSize:  MaterialStateProperty.all<Size>(
+                            Size(MediaQuery.of(context).size.width / 3, 0),
+                          ),
+                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.all(10),
+                          ),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              // Adjust side if needed
+                              // side: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                      ),
                       onPressed: () {
                         onButtonClick();
                         // Navigator.push(
@@ -223,87 +240,96 @@ class _otpVerifyState extends State<otpVerify> {
 
   void onButtonClick() async {
     FocusScope.of(context).unfocus();
+    if(_formKey.currentState != null) {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        print('form is valid');
 
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      print('form is valid');
+        var isInternetConnected = await InternetUtil.isInternetConnected();
 
-      var isInternetConnected = await InternetUtil.isInternetConnected();
+        if (isInternetConnected) {
+          ProgressDialog().showProgressDialog(context);
+          try {
+            var response = await VerifyOTP_repo.verifyotp(
+                widget.email, otptext);
+            print(response!.data);
 
-      if (isInternetConnected) {
-        ProgressDialog().showProgressDialog(context);
-        try {
-          var response = await VerifyOTP_repo.verifyotp(widget.email, otptext);
-          print(response.data);
+            if (response.status == 200) {
+              Fluttertoast.showToast(
+                  msg: "OTP Verification Succesfull..!!!",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 10,
+                  backgroundColor: MyColors.themecolor,
+                  textColor: MyColors.textcolor,
+                  fontSize: 12.0);
 
-          if (response.status == 200) {
-            Fluttertoast.showToast(
-                msg: "OTP Verification Succesfull..!!!",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 10,
-                backgroundColor: MyColors.themecolor,
-                textColor: MyColors.textcolor,
-                fontSize: 12.0);
-
-            if (widget.isCommingFromregistration == true) {
-              onRegisterButtonClick();
+              if (widget.isCommingFromregistration == true) {
+                onRegisterButtonClick();
+              } else {
+                Future.delayed(Duration(seconds: 1), () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ResetPassword(
+                                cart: cart,
+                                email: widget.email,
+                              )));
+                });
+              }
             } else {
-              Future.delayed(Duration(seconds: 1), () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ResetPassword(
-                              cart: cart,
-                              email: widget.email,
-                            )));
-              });
+              Fluttertoast.showToast(
+                  msg: "Wrong OTP...",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 10,
+                  backgroundColor: MyColors.themecolor,
+                  textColor: MyColors.textcolor,
+                  fontSize: 12.0);
             }
-          } else {
-            Fluttertoast.showToast(
-                msg: "Wrong OTP...",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 10,
-                backgroundColor: MyColors.themecolor,
-                textColor: MyColors.textcolor,
-                fontSize: 12.0);
+          } catch (e) {
+            print(e);
+            setState(() {
+              Fluttertoast.showToast(
+                  msg: "Something Wrong, Please Try Again....!!!",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 10,
+                  backgroundColor: MyColors.themecolor,
+                  textColor: MyColors.textcolor,
+                  fontSize: 12.0);
+            });
           }
-        } catch (e) {
-          print(e);
-          setState(() {
-            Fluttertoast.showToast(
-                msg: "Something Wrong, Please Try Again....!!!",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 10,
-                backgroundColor: MyColors.themecolor,
-                textColor: MyColors.textcolor,
-                fontSize: 12.0);
-          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "No Internet Connection....!!!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 10,
+              backgroundColor: MyColors.themecolor,
+              textColor: MyColors.textcolor,
+              fontSize: 12.0);
         }
-      } else {
-        Fluttertoast.showToast(
-            msg: "No Internet Connection....!!!",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 10,
-            backgroundColor: MyColors.themecolor,
-            textColor: MyColors.textcolor,
-            fontSize: 12.0);
-      }
 
-      //  Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryList()),);
-    } else {
-      setState(() {
-        _autoValidate = true;
-      });
+        //  Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryList()),);
+      }
+      else {
+        setState(() {
+          _autoValidate = true;
+        });
+      }
     }
+    else
+      {
+        // _formkey isn null
+      }
   }
 
   void onRegisterButtonClick() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       print('form is valid');
       // userDetails.name = widget.user.name;
       // userDetails.email = widget.user.email;
@@ -318,20 +344,20 @@ class _otpVerifyState extends State<otpVerify> {
       // userDetails.fullname = "abc";
       var isInternetConnected = await InternetUtil.isInternetConnected();
 
-      if (isInternetConnected) {
+      if (isInternetConnected && widget.user != null) {
         ProgressDialog().showProgressDialog(context);
         var response = await RegistrationRepo.registeUserr(
-          widget.user.name,
+          widget.user!.name,
           "abc",
-          widget.user.pharmacyname,
-          widget.user.address,
-          widget.user.city,
-          widget.user.district,
-          widget.user.pincode,
-          widget.user.state,
-          widget.user.phone,
-          widget.user.email,
-          widget.user.password,
+          widget.user!.pharmacyname,
+          widget.user!.address,
+          widget.user!.city,
+          widget.user!.district,
+          widget.user!.pincode,
+          widget.user!.state,
+          widget.user!.phone,
+          widget.user!.email,
+          widget.user!.password,
         );
 
         if (response.status == 201) {
@@ -386,8 +412,8 @@ class _otpVerifyState extends State<otpVerify> {
   void onResendBtnClick() async {
     FocusScope.of(context).unfocus();
 
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       print('form is valid');
 
       var isInternetConnected = await InternetUtil.isInternetConnected();

@@ -7,8 +7,8 @@ class OrderbyID_Model {
   var statuscode;
   var status;
   var qunt;
-  List order;
-  List<Products> product;
+  late List order;
+  late List<Products> product;
 
   OrderbyID_Model(
       {this.id,
@@ -16,7 +16,7 @@ class OrderbyID_Model {
       this.dispatchedDate,
       this.statuscode,
       this.status,
-      this.product});
+      required this.product});
   OrderbyID_Model.fromJson(Map<dynamic, dynamic> json) {
     id = json['order_id'];
     // userId = json['order_user_id'];

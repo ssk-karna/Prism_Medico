@@ -17,7 +17,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class OrderHistory extends StatefulWidget {
   final List<Latest_Product_model> cart;
-  OrderHistory({this.cart});
+  OrderHistory({required this.cart});
 
   _OrderHistoryState createState() => _OrderHistoryState(this.cart);
 }
@@ -25,7 +25,7 @@ class OrderHistory extends StatefulWidget {
 class _OrderHistoryState extends State<OrderHistory> {
   _OrderHistoryState(this.cart);
   List<Latest_Product_model> cart;
-  SharedPreferences sharedPreferences;
+  late SharedPreferences sharedPreferences;
 
   @override
   void initState() {
@@ -214,12 +214,12 @@ class _OrderHistoryState extends State<OrderHistory> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
-          child: FutureBuilder(
+          child: FutureBuilder<SuperResponse<List<order_Model>>?>(
             future: getorderListRepo.getOrderList(userDetails.id),
             builder: (BuildContext context,
-                AsyncSnapshot<SuperResponse<List<order_Model>>> snap) {
+                AsyncSnapshot<SuperResponse<List<order_Model>>?> snap) {
               if (snap.hasData) {
-                var list = snap.data.data;
+                var list = snap.data!.data;
 
                 if (list.isEmpty) {
                   return Center(

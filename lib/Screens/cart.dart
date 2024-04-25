@@ -10,34 +10,33 @@ import 'package:prism_medico/model/latestProduct.dart';
 import 'package:prism_medico/Utilities/myColor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prism_medico/Repo/orderRepo.dart';
-import 'package:prism_medico/model/order_Model.dart';
+import 'package:prism_medico/model/order_Model.dart' as order_model_instance;
 import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Internet_Connection.dart';
-import 'package:prism_medico/utills/Progress_Dialog.dart';
 import 'package:prism_medico/utills/Session_Manager.dart';
 
 class Cart extends StatefulWidget {
-  final Latest_Product_model product;
+  final Latest_Product_model? product;
   final List<Latest_Product_model> cart;
   final name;
   final specificaton;
   final detail;
   final id;
   final rate;
-  bool iscommingfromallproduct;
+  bool? iscommingfromallproduct;
 
   var qunty;
 
   Cart(
       {this.product,
       this.qunty,
-      this.cart,
+      required this.cart,
       this.detail,
       this.id,
       this.name,
       this.rate,
       this.specificaton,
-      this.iscommingfromallproduct});
+        this.iscommingfromallproduct});
 
   _CartState createState() => _CartState(this.cart);
 }
@@ -46,23 +45,23 @@ class _CartState extends State<Cart> {
   final _formKey = GlobalKey<FormState>();
   bool stockavailable = true;
 
-  List<dynamic> listNewArr;
+  List<dynamic> listNewArr = [];
   var isCartEmpty = false;
   _CartState(this.cart);
-  List<Latest_Product_model> cart;
-  List<Latest_Product_model> cart1;
-  List<order_Model> notify = List<order_Model>();
-  List<order_Model> notifylist;
+  List<Latest_Product_model> cart = [];
+  List<Latest_Product_model> cart1 = [];
+  List<order_model_instance.order_Model> notify = [];
+  List<order_model_instance.order_Model> notifylist = [];
   DateTime today = DateTime.now();
-  String dateStr;
-  List<Order> orderItems;
+  late String dateStr;
+  List<order_model_instance.Order> orderItems = [];
   List notificationData = [];
   List orderData = [];
-  int quntity;
+  late int quntity;
   var _qty;
   int counter = 0;
   var quntitystring;
-  TextEditingController _quntitycontroller;
+  late TextEditingController _quntitycontroller;
   var deviceID;
   void getProduct() {
     var list1 = <Latest_Product_model>[
@@ -625,7 +624,7 @@ class _CartState extends State<Cart> {
                                                                         _quntitycontroller
                                                                           ..text =
                                                                               "$_qty",
-                                                                    onSaved: (String
+                                                                    onSaved: (String?
                                                                         newValue) {
                                                                       setState(
                                                                           () {
@@ -671,7 +670,7 @@ class _CartState extends State<Cart> {
                                                                         _quntitycontroller
                                                                           ..text =
                                                                               "$_qty",
-                                                                    onSaved: (String
+                                                                    onSaved: (String?
                                                                         newValue) {
                                                                       setState(
                                                                           () {
@@ -790,17 +789,33 @@ class _CartState extends State<Cart> {
                           ),
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: FlatButton(
+                            child: TextButton(
                               // height: ,
-                              minWidth: MediaQuery.of(context).size.width / 3,
-                              padding: EdgeInsets.all(10),
-                              shape: (RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                //side: BorderSide(color: Colors.red)
-                              )),
-                              textColor: Colors.white,
-                              color: MyColors.themecolor,
-
+                              // minWidth: MediaQuery.of(context).size.width / 3,
+                              // padding: EdgeInsets.all(10),
+                              // shape: (RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(30),
+                              //   //side: BorderSide(color: Colors.red)
+                              // )),
+                              // textColor: Colors.white,
+                              // color: MyColors.themecolor,
+                              style : ButtonStyle(
+                                  minimumSize:  MaterialStateProperty.all<Size>(
+                                    Size(MediaQuery.of(context).size.width / 3, 0),
+                                  ),
+                                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                    EdgeInsets.all(10),
+                                  ),
+                                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      // Adjust side if needed
+                                      // side: BorderSide(color: Colors.red),
+                                    ),
+                                  ),
+                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                  backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                              ),
                               onPressed: () {
                                 _qty = _quntitycontroller.text.toString();
 
@@ -851,16 +866,34 @@ class _CartState extends State<Cart> {
 
   showOrderConfirm(BuildContext context) {
     // set up the buttons
-    Widget okButton = FlatButton(
+    Widget okButton =
+    TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 5,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: MyColors.themecolor,
+      // minWidth: MediaQuery.of(context).size.width / 5,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: MyColors.themecolor,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 5, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+      ),
       onPressed: () {
         //postingList();
         onLoginButtonClick();
@@ -876,16 +909,34 @@ class _CartState extends State<Cart> {
         ),
       ),
     );
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 5,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: Colors.grey,
+      // minWidth: MediaQuery.of(context).size.width / 5,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: Colors.grey,
+
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 5, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.grey)
+      ),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -947,16 +998,34 @@ class _CartState extends State<Cart> {
 
   showOrderplaced(BuildContext context) {
     // set up the buttons
-    Widget okButton = FlatButton(
+    Widget okButton =
+    TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 3,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: MyColors.themecolor,
+      // minWidth: MediaQuery.of(context).size.width / 3,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: MyColors.themecolor,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 3, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+      ),
       onPressed: () {
         setState(() {
           cart.clear();
@@ -1015,16 +1084,33 @@ class _CartState extends State<Cart> {
 
   showOrdernotplaced(BuildContext context) {
     // set up the buttons
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       // height: ,
-      minWidth: MediaQuery.of(context).size.width / 3,
-      padding: EdgeInsets.all(10),
-      shape: (RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //side: BorderSide(color: Colors.red)
-      )),
-      textColor: Colors.white,
-      color: MyColors.themecolor,
+      // minWidth: MediaQuery.of(context).size.width / 3,
+      // padding: EdgeInsets.all(10),
+      // shape: (RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(15),
+      //   //side: BorderSide(color: Colors.red)
+      // )),
+      // textColor: Colors.white,
+      // color: MyColors.themecolor,
+      style : ButtonStyle(
+          minimumSize:  MaterialStateProperty.all<Size>(
+            Size(MediaQuery.of(context).size.width / 3, 0),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(10),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // Adjust side if needed
+              // side: BorderSide(color: Colors.red),
+            ),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+      ),
       onPressed: () {
         setState(() {
           cart.clear();
@@ -1084,108 +1170,113 @@ class _CartState extends State<Cart> {
   void onLoginButtonClick() async {
     FocusScope.of(context).unfocus();
 
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      print('form is valid');
+    if(_formKey.currentState != null) {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        print('form is valid');
 
-      for (int i = 0; i < cart.length; i++) {
-        var orderItems = Order(productId: cart[i].id, qunt: cart[i].quntity);
-
-        orderData.add(orderItems);
-      }
-
-      triggerNotification() {
         for (int i = 0; i < cart.length; i++) {
-          AwesomeNotifications().createNotification(
-              content: NotificationContent(
-            id: 10,
-            channelKey: 'basic_channel',
-            title: '${cart[i].name} order placed....',
-            body: '${cart[i].composition} order placed....',
-          ));
+          var orderItems = order_model_instance.Order(productId: cart[i].id, qunt: cart[i].quntity);
+
+          orderData.add(orderItems);
         }
-      }
 
-      orderDetail.orderDate = dateStr;
-      orderDetail.userId = userDetails.id;
-      orderDetail.status = '1';
-
-      // notify = notifylist;
-      SessionManager().addNotifications(notify);
-      var isInternetConnected = await InternetUtil.isInternetConnected();
-
-      if (isInternetConnected) {
-        // Fluttertoast.showToast(
-        //     msg: "Server Unavailable...Please Try again later..!!!",
-        //     toastLength: Toast.LENGTH_LONG,
-        //     gravity: ToastGravity.CENTER,
-        //     timeInSecForIosWeb: 10,
-        //     backgroundColor: MyColors.themecolor,
-        //     textColor: MyColors.textcolor,
-        //     fontSize: 12.0);
-        try {
-          var response = await Order_repo.orderRepo(
-            orderDetail.orderDate,
-            orderDetail.userId,
-            orderDetail.status,
-            orderData,
-          );
-         // ProgressDialog.showProgressDialog(context);
-          print(response.data);
-
-          if (response.status == 201) {
-            // Fluttertoast.showToast(
-            //     msg: "Your order has been placed.",
-            //     toastLength: Toast.LENGTH_LONG,
-            //     gravity: ToastGravity.CENTER,
-            //     timeInSecForIosWeb: 10,
-            //     backgroundColor: MyColors.themecolor,
-            //     textColor: MyColors.textcolor,
-            //     fontSize: 12.0);
-            showOrderplaced(context);
-            triggerNotification();
-          } else {
-            if (response.status == 422) {
-              Fluttertoast.showToast(
-                  msg: response.message,
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 10,
-                  backgroundColor: MyColors.themecolor,
-                  textColor: MyColors.textcolor,
-                  fontSize: 12.0);
-            } else {}
-
-            // Fluttertoast.showToast(
-            //     msg: "Order Not Palced",
-            //     toastLength: Toast.LENGTH_LONG,
-            //     gravity: ToastGravity.CENTER,
-            //     timeInSecForIosWeb: 10,
-            //     backgroundColor: MyColors.themecolor,
-            //     textColor: MyColors.textcolor,
-            //     fontSize: 12.0);
-            Navigator.pop(context);
-            SessionManager().addNotifications(notify);
-            showOrdernotplaced(context);
+        triggerNotification() {
+          for (int i = 0; i < cart.length; i++) {
+            AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  id: 10,
+                  channelKey: 'basic_channel',
+                  title: '${cart[i].name} order placed....',
+                  body: '${cart[i].composition} order placed....',
+                ));
           }
-        } catch (error) {
-          //Navigator.of(context).pop();
+        }
+
+        orderDetail.orderDate = dateStr;
+        orderDetail.userId = userDetails.id;
+        orderDetail.status = '1';
+
+        // notify = notifylist;
+        SessionManager().addNotifications(notify);
+        var isInternetConnected = await InternetUtil.isInternetConnected();
+
+        if (isInternetConnected) {
+          // Fluttertoast.showToast(
+          //     msg: "Server Unavailable...Please Try again later..!!!",
+          //     toastLength: Toast.LENGTH_LONG,
+          //     gravity: ToastGravity.CENTER,
+          //     timeInSecForIosWeb: 10,
+          //     backgroundColor: MyColors.themecolor,
+          //     textColor: MyColors.textcolor,
+          //     fontSize: 12.0);
+          try {
+            var response = await Order_repo.orderRepo(
+              orderDetail.orderDate,
+              orderDetail.userId,
+              orderDetail.status,
+              orderData,
+            );
+            // ProgressDialog.showProgressDialog(context);
+            print(response.data);
+
+            if (response.status == 201) {
+              // Fluttertoast.showToast(
+              //     msg: "Your order has been placed.",
+              //     toastLength: Toast.LENGTH_LONG,
+              //     gravity: ToastGravity.CENTER,
+              //     timeInSecForIosWeb: 10,
+              //     backgroundColor: MyColors.themecolor,
+              //     textColor: MyColors.textcolor,
+              //     fontSize: 12.0);
+              showOrderplaced(context);
+              triggerNotification();
+            } else {
+              if (response.status == 422) {
+                Fluttertoast.showToast(
+                    msg: response.message!,
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 10,
+                    backgroundColor: MyColors.themecolor,
+                    textColor: MyColors.textcolor,
+                    fontSize: 12.0);
+              } else {}
+
+              // Fluttertoast.showToast(
+              //     msg: "Order Not Palced",
+              //     toastLength: Toast.LENGTH_LONG,
+              //     gravity: ToastGravity.CENTER,
+              //     timeInSecForIosWeb: 10,
+              //     backgroundColor: MyColors.themecolor,
+              //     textColor: MyColors.textcolor,
+              //     fontSize: 12.0);
+              Navigator.pop(context);
+              SessionManager().addNotifications(notify);
+              showOrdernotplaced(context);
+            }
+          } catch (error) {
+            //Navigator.of(context).pop();
+            print(
+              'API Fail',
+            );
+            print(error);
+          }
+        } else {
           print(
-            'API Fail',
+            'No Internet Connection!!',
           );
-          print(error);
         }
       } else {
-        print(
-          'No Internet Connection!!',
-        );
+        setState(() {});
       }
-    } else {
-      setState(() {});
+    }
+    else{
+      // form is null
     }
   }
 
-  void _goToHomePage(List<order_Model> user) {
+  void _goToHomePage(List<order_model_instance.order_Model> user) {
     SessionManager().addNotifications(user);
     orderDetailS = user;
 

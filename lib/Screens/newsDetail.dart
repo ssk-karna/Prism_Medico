@@ -14,7 +14,7 @@ class NewsDetail extends StatefulWidget {
   final newtitle;
   final List<Latest_Product_model> cart;
 
-  NewsDetail({this.newsimage, this.newtitle, this.cart});
+  NewsDetail({this.newsimage, this.newtitle, required this.cart});
   _NewsDetailState createState() => _NewsDetailState(this.cart);
 }
 

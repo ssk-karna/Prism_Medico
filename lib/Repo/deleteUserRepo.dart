@@ -9,7 +9,7 @@ import 'package:prism_medico/utills/Super_Responce.dart';
 
 class deleteUserRepo{
 
- static Future<SuperResponse> deleteUserById(
+ static Future<SuperResponse?> deleteUserById(
       String userId,
       ) async {
     // userDetails = await SessionManager.getUser();
@@ -18,14 +18,14 @@ class deleteUserRepo{
     var body = {
       'user_id': userId,
     };
-
+    Uri url = Uri.parse("${Constants.BASE_URL}prism/user/delete-user.php?user_id=$userId");
     var isInternetConnected = await InternetUtil.isInternetConnected();
 
     if (isInternetConnected) {
       print('Internet Available');
 
       return http.delete(
-        "${Constants.BASE_URL}prism/user/delete-user.php?user_id=$userId",
+        url,
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       ).then((http.Response response) {
         if (response.statusCode < 200 ||

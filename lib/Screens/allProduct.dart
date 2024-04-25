@@ -21,7 +21,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AllProduct extends StatefulWidget {
   final List<Latest_Product_model> cart;
-  AllProduct({this.cart});
+  AllProduct({required this.cart});
   _AllProductState createState() => _AllProductState(this.cart);
 }
 
@@ -42,10 +42,10 @@ class _AllProductState extends State<AllProduct> {
   List<String> matches = <String>[];
   TextEditingController controller = TextEditingController();
   List suggestionList = [];
-  String search;
+  late String search = '';
   String hint = "";
-  String _qnty;
-  String searchProName;
+  late String _qnty = '';
+  late String searchProName = '';
   final _formKey = GlobalKey<FormState>();
   TextEditingController _quntyController = TextEditingController();
   var list;
@@ -58,14 +58,16 @@ class _AllProductState extends State<AllProduct> {
       _quntyController.clear();
     });
     allProductListRepo.getallProduct().then((value) {
-      productData = value.data;
-      for (int i = 0; i < value.data.length; i++) {
-        var list = Latest_Product_model(name: value.data[i].name);
-        var idlist = Latest_Product_model(id: value.data[i].id);
-        print(list.name);
-        print(idlist.id);
-        proname.add(list.name);
-        proId.add(idlist.id);
+      productData = value?.data;
+      if (value != null && value.data != null) {
+        for (int i = 0; i < value.data.length; i++) {
+          var list = Latest_Product_model(name: value.data[i].name);
+          var idlist = Latest_Product_model(id: value.data[i].id);
+          print(list.name);
+          print(idlist.id);
+          proname.add(list.name);
+          proId.add(idlist.id);
+        }
       }
     });
 
@@ -345,7 +347,7 @@ class _AllProductState extends State<AllProduct> {
                         child: TextFormField(
                             controller: controller,
                             onSaved: (newValue) {
-                              search = newValue;
+                              search = newValue!;
                             },
                             autofillHints: proname,
                             onFieldSubmitted: (value) {
@@ -466,7 +468,7 @@ class _AllProductState extends State<AllProduct> {
                                                       controller:
                                                           _quntyController,
                                                       onSaved: (newValue) {
-                                                        _qnty = newValue;
+                                                        _qnty = newValue!;
                                                       },
                                                     ),
                                                   ),
@@ -480,130 +482,162 @@ class _AllProductState extends State<AllProduct> {
                                   ),
                                   actions: [
                                     Center(
-                                        child: FlatButton(
-                                      // height: ,
-                                      // minWidth: MediaQuery.of(context).size.width / 3,
-                                      padding:
-                                          EdgeInsets.only(left: 15, right: 15),
-                                      shape: (RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        //side: BorderSide(color: Colors.red)
-                                      )),
-                                      textColor: Colors.white,
-                                      color: MyColors.themecolor,
+                                        child:
+                                        TextButton(
+                                          // height: ,
+                                          style : ButtonStyle(
+                                              // minimumSize:  MaterialStateProperty.all<Size>(
+                                              //   Size(MediaQuery.of(context).size.width / 3, 0),
+                                              // ),
+                                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                                EdgeInsets.only(left: 15, right : 15),
+                                              ),
+                                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  // Adjust side if needed
+                                                  // side: BorderSide(color: Colors.red),
+                                                ),
+                                              ),
+                                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                              backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                                          ),
+
                                       onPressed: () async {
-                                        if (_formKey.currentState.validate()) {
-                                          _formKey.currentState.save();
+                                         if(_formKey.currentState != null) {
+                                           if (_formKey.currentState!
+                                               .validate()) {
+                                             _formKey.currentState!.save();
 
-                                          print('form is valid');
+                                             print('form is valid');
 
-                                          _qnty =
-                                              _quntyController.text.toString();
+                                             _qnty =
+                                                 _quntyController.text
+                                                     .toString();
 
-                                          productData[index].quntity =
-                                              int.parse(_qnty);
-                                          if (cart.length != 0) {
-                                            if (cart.contains(
-                                                productData[index].id)) {
-                                              setState(() {
-                                                cart[cart.indexWhere(
-                                                        (element) =>
-                                                            element.id ==
-                                                            cart[index].id)] =
-                                                    cart[index];
-                                              });
-                                              _quntyController.clear();
-                                              Navigator.of(context).pop();
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      "${productData[index].name} updated into cart...",
-                                                  gravity: ToastGravity.CENTER,
-                                                  backgroundColor:
-                                                      Colors.lightBlue,
-                                                  textColor: MyColors.textcolor,
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG);
-                                            } else {
-                                              if (productData[index].quntity ==
-                                                  0) {
-                                                _quntyController.clear();
-                                                Navigator.of(context).pop();
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "Please enter quntity...",
-                                                    gravity:
-                                                        ToastGravity.CENTER,
-                                                    backgroundColor:
-                                                        Colors.lightBlue[200],
-                                                    textColor:
-                                                        MyColors.textcolor,
-                                                    toastLength:
-                                                        Toast.LENGTH_LONG);
-                                              } else {
-                                                setState(() {
-                                                  cart.add(productData[index]);
-                                                  _quntyController.clear();
-                                                  SessionManager.saveCartObject(
-                                                      cart);
-                                                });
-                                                Navigator.of(context).pop();
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "${productData[index].name} added into cart...",
-                                                    gravity:
-                                                        ToastGravity.CENTER,
-                                                    backgroundColor:
-                                                        Colors.lightBlue[200],
-                                                    textColor:
-                                                        MyColors.textcolor,
-                                                    toastLength:
-                                                        Toast.LENGTH_LONG);
-                                                SessionManager.saveCartObject(
-                                                    cart);
-                                              }
-                                            }
-                                          } else {
-                                            print("something wronge");
-                                            if (productData[index].quntity ==
-                                                0) {
-                                              _quntyController.clear();
-                                              Navigator.of(context).pop();
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please enter quntity...",
-                                                  gravity: ToastGravity.CENTER,
-                                                  backgroundColor:
-                                                      Colors.lightBlue[200],
-                                                  textColor: MyColors.textcolor,
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG);
-                                            } else {
-                                              setState(() {
-                                                cart.add(productData[index]);
-                                                _quntyController.clear();
-                                                SessionManager.saveCartObject(
-                                                    cart);
-                                              });
-                                              Navigator.of(context).pop();
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      "${productData[index].name} added into cart...",
-                                                  gravity: ToastGravity.CENTER,
-                                                  backgroundColor:
-                                                      Colors.lightBlue[200],
-                                                  textColor: MyColors.textcolor,
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG);
-                                              SessionManager.saveCartObject(
-                                                  cart);
-                                            }
-                                          }
-                                        } else {
-                                          setState(() {
-                                            print("Try again later....");
-                                          });
-                                          Navigator.of(context).pop();
-                                        }
+                                             productData[index].quntity =
+                                                 int.parse(_qnty);
+                                             if (cart.length != 0) {
+                                               if (cart.contains(
+                                                   productData[index].id)) {
+                                                 setState(() {
+                                                   cart[cart.indexWhere(
+                                                           (element) =>
+                                                       element.id ==
+                                                           cart[index].id)] =
+                                                   cart[index];
+                                                 });
+                                                 _quntyController.clear();
+                                                 Navigator.of(context).pop();
+                                                 Fluttertoast.showToast(
+                                                     msg:
+                                                     "${productData[index]
+                                                         .name} updated into cart...",
+                                                     gravity: ToastGravity
+                                                         .CENTER,
+                                                     backgroundColor:
+                                                     Colors.lightBlue,
+                                                     textColor: MyColors
+                                                         .textcolor,
+                                                     toastLength:
+                                                     Toast.LENGTH_LONG);
+                                               } else {
+                                                 if (productData[index]
+                                                     .quntity ==
+                                                     0) {
+                                                   _quntyController.clear();
+                                                   Navigator.of(context).pop();
+                                                   Fluttertoast.showToast(
+                                                       msg:
+                                                       "Please enter quntity...",
+                                                       gravity:
+                                                       ToastGravity.CENTER,
+                                                       backgroundColor:
+                                                       Colors.lightBlue[200],
+                                                       textColor:
+                                                       MyColors.textcolor,
+                                                       toastLength:
+                                                       Toast.LENGTH_LONG);
+                                                 } else {
+                                                   setState(() {
+                                                     cart.add(
+                                                         productData[index]);
+                                                     _quntyController.clear();
+                                                     SessionManager
+                                                         .saveCartObject(
+                                                         cart);
+                                                   });
+                                                   Navigator.of(context).pop();
+                                                   Fluttertoast.showToast(
+                                                       msg:
+                                                       "${productData[index]
+                                                           .name} added into cart...",
+                                                       gravity:
+                                                       ToastGravity.CENTER,
+                                                       backgroundColor:
+                                                       Colors.lightBlue[200],
+                                                       textColor:
+                                                       MyColors.textcolor,
+                                                       toastLength:
+                                                       Toast.LENGTH_LONG);
+                                                   SessionManager
+                                                       .saveCartObject(
+                                                       cart);
+                                                 }
+                                               }
+                                             } else {
+                                               print("something wronge");
+                                               if (productData[index].quntity ==
+                                                   0) {
+                                                 _quntyController.clear();
+                                                 Navigator.of(context).pop();
+                                                 Fluttertoast.showToast(
+                                                     msg:
+                                                     "Please enter quntity...",
+                                                     gravity: ToastGravity
+                                                         .CENTER,
+                                                     backgroundColor:
+                                                     Colors.lightBlue[200],
+                                                     textColor: MyColors
+                                                         .textcolor,
+                                                     toastLength:
+                                                     Toast.LENGTH_LONG);
+                                               } else {
+                                                 setState(() {
+                                                   cart.add(productData[index]);
+                                                   _quntyController.clear();
+                                                   SessionManager
+                                                       .saveCartObject(
+                                                       cart);
+                                                 });
+                                                 Navigator.of(context).pop();
+                                                 Fluttertoast.showToast(
+                                                     msg:
+                                                     "${productData[index]
+                                                         .name} added into cart...",
+                                                     gravity: ToastGravity
+                                                         .CENTER,
+                                                     backgroundColor:
+                                                     Colors.lightBlue[200],
+                                                     textColor: MyColors
+                                                         .textcolor,
+                                                     toastLength:
+                                                     Toast.LENGTH_LONG);
+                                                 SessionManager.saveCartObject(
+                                                     cart);
+                                               }
+                                             }
+                                           } else {
+                                             setState(() {
+                                               print("Try again later....");
+                                             });
+                                             Navigator.of(context).pop();
+                                           }
+                                         }
+                                         else
+                                         {
+                                           //formkey is null
+                                         }
                                       },
                                       child: Text(
                                         'ADD',
@@ -613,7 +647,8 @@ class _AllProductState extends State<AllProduct> {
                                           fontSize: 12,
                                         ),
                                       ),
-                                    )),
+                                     )
+                                    ),
                                   ],
                                 );
 
@@ -726,14 +761,14 @@ class _AllProductState extends State<AllProduct> {
                         ),
                       )
                     ] else ...[
-                      FutureBuilder(
-                        future: searchProductListRepo.searchProduct(search),
+                      FutureBuilder<SuperResponse<List<Latest_Product_model>>?>(
+                        future: searchProductListRepo.searchProduct(search) ,
                         builder: (BuildContext context,
                             AsyncSnapshot<
-                                    SuperResponse<List<Latest_Product_model>>>
+                                    SuperResponse<List<Latest_Product_model>>?>
                                 snap) {
                           if (snap.hasData) {
-                            list = snap.data.data;
+                            list = snap.data?.data;
 
                             return Expanded(
                               child: ListView.builder(
@@ -839,7 +874,7 @@ class _AllProductState extends State<AllProduct> {
                                                                               _quntyController,
                                                                           validator:
                                                                               (value) {
-                                                                            if (value.isEmpty) {
+                                                                            if (value!.isEmpty) {
                                                                               return 'Enter Quntity';
                                                                             }
                                                                             if (value ==
@@ -850,8 +885,7 @@ class _AllProductState extends State<AllProduct> {
                                                                           },
                                                                           onSaved:
                                                                               (value) {
-                                                                            _qnty =
-                                                                                value;
+                                                                            _qnty = value!;
                                                                           },
                                                                           keyboardType:
                                                                               TextInputType.number,
@@ -866,198 +900,251 @@ class _AllProductState extends State<AllProduct> {
                                                     ),
                                                     actions: [
                                                       Center(
-                                                          child: FlatButton(
+                                                          child: TextButton(
                                                         // height: ,
                                                         // minWidth: MediaQuery.of(context).size.width / 3,
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 15,
-                                                                right: 15),
-                                                        shape:
-                                                            (RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                          //side: BorderSide(color: Colors.red)
-                                                        )),
-                                                        textColor: Colors.white,
-                                                        color:
-                                                            MyColors.themecolor,
+                                                        // padding:
+                                                        //     EdgeInsets.only(
+                                                        //         left: 15,
+                                                        //         right: 15),
+                                                        // shape:
+                                                        //     (RoundedRectangleBorder(
+                                                        //   borderRadius:
+                                                        //       BorderRadius
+                                                        //           .circular(12),
+                                                        //   //side: BorderSide(color: Colors.red)
+                                                        // )),
+                                                        // textColor: Colors.white,
+                                                        // color:
+                                                        //     MyColors.themecolor,
+                                                            style : ButtonStyle(
+                                                                minimumSize:  MaterialStateProperty.all<Size>(
+                                                                  Size(MediaQuery.of(context).size.width / 3, 0),
+                                                                ),
+                                                                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                                                  EdgeInsets.only(left: 15,
+                                                          right: 15),
+                                                                ),
+                                                                shape: MaterialStateProperty.all<OutlinedBorder>(
+                                                                  RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(12),
+                                                                    // Adjust side if needed
+                                                                    // side: BorderSide(color: Colors.red),
+                                                                  ),
+                                                                ),
+                                                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                                                backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                                                            ),
                                                         onPressed: () async {
-                                                          if (_formKey
-                                                              .currentState
-                                                              .validate()) {
-                                                            _formKey
-                                                                .currentState
-                                                                .save();
+                                                              if(_formKey
+                                                                  .currentState != null) {
+                                                                if (_formKey
+                                                                    .currentState!
+                                                                    .validate()) {
+                                                                  _formKey
+                                                                      .currentState!
+                                                                      .save();
 
-                                                            print(
-                                                                'form is valid');
+                                                                  print(
+                                                                      'form is valid');
 
-                                                            _qnty =
-                                                                _quntyController
-                                                                    .text
-                                                                    .toString();
+                                                                  _qnty =
+                                                                      _quntyController
+                                                                          .text
+                                                                          .toString();
 
-                                                            e.quntity =
-                                                                int.parse(
-                                                                    _qnty);
-                                                            if (cart.length !=
-                                                                0) {
-                                                              if (cart[index]
-                                                                  .id
-                                                                  .contains(
-                                                                      e.id)) {
-                                                                setState(() {
-                                                                  cart[cart.indexWhere(
-                                                                      (element) =>
-                                                                          element
-                                                                              .id ==
-                                                                          e.id)] = cart[
-                                                                      index];
-                                                                });
-                                                                _quntyController
-                                                                    .clear();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                Fluttertoast.showToast(
-                                                                    msg:
-                                                                        "${e.name} updated into cart...",
-                                                                    gravity:
-                                                                        ToastGravity
-                                                                            .CENTER,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .lightBlue,
-                                                                    textColor:
-                                                                        MyColors
-                                                                            .textcolor,
-                                                                    toastLength:
-                                                                        Toast
-                                                                            .LENGTH_LONG);
-                                                              } else {
-                                                                if (e.quntity ==
-                                                                    0) {
-                                                                  _quntyController
-                                                                      .clear();
-                                                                  Navigator.of(
+                                                                  e.quntity =
+                                                                      int.parse(
+                                                                          _qnty);
+                                                                  if (cart
+                                                                      .length !=
+                                                                      0) {
+                                                                    if (cart[index]
+                                                                        .id
+                                                                        .contains(
+                                                                        e.id)) {
+                                                                      setState(() {
+                                                                        cart[cart
+                                                                            .indexWhere(
+                                                                                (
+                                                                                element) =>
+                                                                            element
+                                                                                .id ==
+                                                                                e
+                                                                                    .id)] =
+                                                                        cart[
+                                                                        index];
+                                                                      });
+                                                                      _quntyController
+                                                                          .clear();
+                                                                      Navigator
+                                                                          .of(
                                                                           context)
-                                                                      .pop();
-                                                                  Fluttertoast.showToast(
-                                                                      msg:
-                                                                          "Please enter quntity...",
-                                                                      gravity:
+                                                                          .pop();
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                          msg:
+                                                                          "${e
+                                                                              .name} updated into cart...",
+                                                                          gravity:
                                                                           ToastGravity
                                                                               .CENTER,
-                                                                      backgroundColor:
-                                                                          Colors.lightBlue[
-                                                                              200],
-                                                                      textColor:
+                                                                          backgroundColor:
+                                                                          Colors
+                                                                              .lightBlue,
+                                                                          textColor:
                                                                           MyColors
                                                                               .textcolor,
-                                                                      toastLength:
+                                                                          toastLength:
                                                                           Toast
                                                                               .LENGTH_LONG);
+                                                                    } else {
+                                                                      if (e
+                                                                          .quntity ==
+                                                                          0) {
+                                                                        _quntyController
+                                                                            .clear();
+                                                                        Navigator
+                                                                            .of(
+                                                                            context)
+                                                                            .pop();
+                                                                        Fluttertoast
+                                                                            .showToast(
+                                                                            msg:
+                                                                            "Please enter quntity...",
+                                                                            gravity:
+                                                                            ToastGravity
+                                                                                .CENTER,
+                                                                            backgroundColor:
+                                                                            Colors
+                                                                                .lightBlue[
+                                                                            200],
+                                                                            textColor:
+                                                                            MyColors
+                                                                                .textcolor,
+                                                                            toastLength:
+                                                                            Toast
+                                                                                .LENGTH_LONG);
+                                                                      } else {
+                                                                        setState(() {
+                                                                          cart
+                                                                              .add(
+                                                                              e);
+                                                                          _quntyController
+                                                                              .clear();
+                                                                          SessionManager
+                                                                              .saveCartObject(
+                                                                              cart);
+                                                                        });
+                                                                        Navigator
+                                                                            .of(
+                                                                            context)
+                                                                            .pop();
+                                                                        Fluttertoast
+                                                                            .showToast(
+                                                                            msg:
+                                                                            "${e
+                                                                                .name} added into cart...",
+                                                                            gravity:
+                                                                            ToastGravity
+                                                                                .CENTER,
+                                                                            backgroundColor:
+                                                                            Colors
+                                                                                .lightBlue[
+                                                                            200],
+                                                                            textColor:
+                                                                            MyColors
+                                                                                .textcolor,
+                                                                            toastLength:
+                                                                            Toast
+                                                                                .LENGTH_LONG);
+                                                                        SessionManager
+                                                                            .saveCartObject(
+                                                                            cart);
+                                                                      }
+                                                                    }
+                                                                  } else {
+                                                                    print(
+                                                                        "something wronge");
+                                                                    if (e
+                                                                        .quntity ==
+                                                                        0) {
+                                                                      _quntyController
+                                                                          .clear();
+                                                                      Navigator
+                                                                          .of(
+                                                                          context)
+                                                                          .pop();
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                          msg:
+                                                                          "Please enter quntity...",
+                                                                          gravity:
+                                                                          ToastGravity
+                                                                              .CENTER,
+                                                                          backgroundColor:
+                                                                          Colors
+                                                                              .lightBlue[
+                                                                          200],
+                                                                          textColor:
+                                                                          MyColors
+                                                                              .textcolor,
+                                                                          toastLength:
+                                                                          Toast
+                                                                              .LENGTH_LONG);
+                                                                    } else {
+                                                                      setState(() {
+                                                                        cart
+                                                                            .add(
+                                                                            e);
+                                                                        _quntyController
+                                                                            .clear();
+                                                                        SessionManager
+                                                                            .saveCartObject(
+                                                                            cart);
+                                                                      });
+                                                                      Navigator
+                                                                          .of(
+                                                                          context)
+                                                                          .pop();
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                          msg:
+                                                                          "${e
+                                                                              .name} added into cart...",
+                                                                          gravity:
+                                                                          ToastGravity
+                                                                              .CENTER,
+                                                                          backgroundColor:
+                                                                          Colors
+                                                                              .lightBlue[
+                                                                          200],
+                                                                          textColor:
+                                                                          MyColors
+                                                                              .textcolor,
+                                                                          toastLength:
+                                                                          Toast
+                                                                              .LENGTH_LONG);
+                                                                      SessionManager
+                                                                          .saveCartObject(
+                                                                          cart);
+                                                                    }
+                                                                  }
                                                                 } else {
                                                                   setState(() {
-                                                                    cart.add(e);
-                                                                    _quntyController
-                                                                        .clear();
-                                                                    SessionManager
-                                                                        .saveCartObject(
-                                                                            cart);
+                                                                    print(
+                                                                        "Try again later....");
                                                                   });
                                                                   Navigator.of(
-                                                                          context)
+                                                                      context)
                                                                       .pop();
-                                                                  Fluttertoast.showToast(
-                                                                      msg:
-                                                                          "${e.name} added into cart...",
-                                                                      gravity:
-                                                                          ToastGravity
-                                                                              .CENTER,
-                                                                      backgroundColor:
-                                                                          Colors.lightBlue[
-                                                                              200],
-                                                                      textColor:
-                                                                          MyColors
-                                                                              .textcolor,
-                                                                      toastLength:
-                                                                          Toast
-                                                                              .LENGTH_LONG);
-                                                                  SessionManager
-                                                                      .saveCartObject(
-                                                                          cart);
                                                                 }
                                                               }
-                                                            } else {
-                                                              print(
-                                                                  "something wronge");
-                                                              if (e.quntity ==
-                                                                  0) {
-                                                                _quntyController
-                                                                    .clear();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                Fluttertoast.showToast(
-                                                                    msg:
-                                                                        "Please enter quntity...",
-                                                                    gravity:
-                                                                        ToastGravity
-                                                                            .CENTER,
-                                                                    backgroundColor:
-                                                                        Colors.lightBlue[
-                                                                            200],
-                                                                    textColor:
-                                                                        MyColors
-                                                                            .textcolor,
-                                                                    toastLength:
-                                                                        Toast
-                                                                            .LENGTH_LONG);
-                                                              } else {
-                                                                setState(() {
-                                                                  cart.add(e);
-                                                                  _quntyController
-                                                                      .clear();
-                                                                  SessionManager
-                                                                      .saveCartObject(
-                                                                          cart);
-                                                                });
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                Fluttertoast.showToast(
-                                                                    msg:
-                                                                        "${e.name} added into cart...",
-                                                                    gravity:
-                                                                        ToastGravity
-                                                                            .CENTER,
-                                                                    backgroundColor:
-                                                                        Colors.lightBlue[
-                                                                            200],
-                                                                    textColor:
-                                                                        MyColors
-                                                                            .textcolor,
-                                                                    toastLength:
-                                                                        Toast
-                                                                            .LENGTH_LONG);
-                                                                SessionManager
-                                                                    .saveCartObject(
-                                                                        cart);
-                                                              }
-                                                            }
-                                                          } else {
-                                                            setState(() {
-                                                              print(
-                                                                  "Try again later....");
-                                                            });
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          }
-                                                        },
+                                                              else
+                                                                {
+                                                                  //formkey is null
+                                                                }
+                                                              },
                                                         child: Text(
                                                           'ADD',
                                                           style: TextStyle(

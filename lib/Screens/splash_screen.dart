@@ -13,8 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  SharedPreferences sharedPreferences;
-  List<Latest_Product_model> cart = List<Latest_Product_model>();
+  late SharedPreferences sharedPreferences;
+  List<Latest_Product_model> cart = [];
 
   void initState() {
     SessionManager.isUserLogin().then((value) => {

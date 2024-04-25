@@ -10,7 +10,7 @@ enum defaultaddress { yes, no }
 class Add_Address extends StatefulWidget {
   final List<Latest_Product_model> cart;
 
-  Add_Address({this.cart});
+  Add_Address({required this.cart});
   _AddAddressState createState() => _AddAddressState(this.cart);
 }
 
@@ -153,16 +153,25 @@ class _AddAddressState extends State<Add_Address> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 30,
                     ),
-                    FlatButton(
+                    TextButton(
                       // height: ,
-                      minWidth: MediaQuery.of(context).size.width / 3,
-                      padding: EdgeInsets.all(10),
-                      shape: (RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        //side: BorderSide(color: Colors.red)
-                      )),
-                      textColor: Colors.white,
-                      color: MyColors.themecolor,
+                      style : ButtonStyle(
+                      minimumSize:  MaterialStateProperty.all<Size>(
+                        Size(MediaQuery.of(context).size.width / 3, 0),
+                      ),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.all(10),
+                      ),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          // Adjust side if needed
+                          // side: BorderSide(color: Colors.red),
+                        ),
+                      ),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: MaterialStateProperty.all<Color>(MyColors.themecolor)
+                    ),
                       onPressed: () {
                         Navigator.push(
                             context,

@@ -9,10 +9,12 @@ import 'package:prism_medico/utills/Constant.dart';
 import 'package:prism_medico/utills/Super_Responce.dart';
 
 class GetbyUserID {
-  static Future<SuperResponse<User_Registration>> getByuserId(String id) async {
+  static Future<SuperResponse<User_Registration>?> getByuserId(String id) async {
     var body = {'user_id': id};
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/user/getUserDetailsById.php/$id');
+
     return http.get(
-      '${Constants.BASE_URL}prism/user/getUserDetailsById.php/$id',
+      url,
       headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     ).then((http.Response response) {
       if (response.statusCode < 200 ||
@@ -38,12 +40,12 @@ class GetbyUserID {
       Map<dynamic, dynamic> map = json.decode(response.body);
       if (map != null) {
         final data = map['data'];
-        if (data != null && data != "") {
+    //    if (data != null && data != "") {
           return SuperResponse.fromJson(map, User_Registration.fromJson(data));
-        } else {
-          print("Data is recive null");
-          return SuperResponse.fromJson(map, null);
-        }
+        // } else {
+        //   print("Data is recive null");
+        //   return SuperResponse.fromJson(map, null);
+        // }
       } else {
         print("data null");
       }

@@ -30,7 +30,7 @@ class UpdateUserRepo {
     String img,
   ) async {
     //FirebaseApp.initializeApp();
-    final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     var deviceId = await SessionManager.getDeviceId();
     var fcmToken = await firebaseMessaging.getToken();
 
@@ -57,8 +57,10 @@ class UpdateUserRepo {
       //  'device_type': Platform.isAndroid ? "iOS" : "Android",
       //'register_type': 'mnumber'
     };
+    Uri url = Uri.parse('${Constants.BASE_URL}prism/user/update-user.php?user_id=$userId');
+
     return http
-        .post('${Constants.BASE_URL}prism/user/update-user.php?user_id=$userId',
+        .post(url,
             headers: {HttpHeaders.contentTypeHeader: 'application/json'},
             body: json.encode(body))
         .then((http.Response response) {
@@ -80,11 +82,11 @@ class UpdateUserRepo {
       Map<dynamic, dynamic> map = json.decode(Utils.filterResponseString(response.body));
       final data = map['data']['userData'];
 
-      if (data != null && data != "") {
+   //   if (data != null && data != "") {
         return SuperResponse.fromJson(map, User_Registration.fromJson(data));
-      } else {
-        return SuperResponse.fromJson(map, null);
-      }
+      // } else {
+      //   return SuperResponse.fromJson(map, null);
+      // }
     });
   }
 }

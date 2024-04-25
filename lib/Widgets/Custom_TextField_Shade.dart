@@ -13,7 +13,7 @@ class CustomTextFieldShade extends StatelessWidget {
   final counter;
   final saved;
   const CustomTextFieldShade({
-    Key key,
+    Key? key,
     this.saved,
     this.controller,
     this.labelText,

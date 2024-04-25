@@ -17,7 +17,7 @@ class OredrDetail extends StatefulWidget {
   final order_Model order_model;
   final List<Latest_Product_model> cart;
 
-  OredrDetail({this.order_model, this.cart});
+  OredrDetail({required this.order_model, required this.cart});
   _OrderDetailState createState() => _OrderDetailState(this.cart);
 }
 
@@ -34,7 +34,7 @@ class _OrderDetailState extends State<OredrDetail> {
     super.initState();
 
     getorderDetailRepo.getOrderDetail(widget.order_model.id).then((value) {
-      for (int i = 0; i < value.data.length; i++) {
+      for (int i = 0; i < value!.data.length; i++) {
         setState(() {
           total = total + int.parse(value.data[i].quntity);
         });
@@ -218,12 +218,12 @@ class _OrderDetailState extends State<OredrDetail> {
       body: Form(
         child: Container(
           color: Colors.white,
-          child: FutureBuilder(
+          child: FutureBuilder<SuperResponse<List<Products>>?>(
               future: getorderDetailRepo.getOrderDetail(widget.order_model.id),
               builder: (BuildContext context,
-                  AsyncSnapshot<SuperResponse<List<Products>>> snap) {
+                  AsyncSnapshot<SuperResponse<List<Products>>?> snap) {
                 if (snap.hasData) {
-                  var list = snap.data.data;
+                  var list = snap.data!.data;
                   return Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -301,15 +301,16 @@ class _OrderDetailState extends State<OredrDetail> {
                               ),
                               Container(
                                 height: MediaQuery.of(context).size.height / 2,
-                                child: FutureBuilder(
+                                child: FutureBuilder<
+                                    SuperResponse<List<Products>>?>(
                                     future: getorderDetailRepo
                                         .getOrderDetail(widget.order_model.id),
                                     builder: (BuildContext context,
                                         AsyncSnapshot<
-                                                SuperResponse<List<Products>>>
+                                                SuperResponse<List<Products>>?>
                                             snap) {
                                       if (snap.hasData) {
-                                        var list = snap.data.data;
+                                        var list = snap.data!.data;
 
                                         return ListView(
                                           children: <Widget>[
