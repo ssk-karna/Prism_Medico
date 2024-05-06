@@ -46,6 +46,7 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   void initState() {
     super.initState();
+
     setState(() {
       cart.length;
       //  widget.productDetail.quntity = 0;
@@ -717,7 +718,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   } else if (widget.productDetail.quntity == 0 ||
                                       widget.productDetail.quntity == null) {
                                     Fluttertoast.showToast(
-                                        msg: "Enter Quntity",
+                                        msg: "Enter Qunatity",
                                         gravity: ToastGravity.CENTER,
                                         backgroundColor: Colors.lightBlue,
                                         textColor: MyColors.textcolor,
@@ -824,7 +825,8 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-  void updateQuantityInDatabase(Latest_Product_model item) {
+  Future<void> updateQuantityInDatabase(Latest_Product_model item) async {
+    await Firebase.initializeApp();
     FirebaseFirestore.instance
         .collection('list')
         .doc(item.id)

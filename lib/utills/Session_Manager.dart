@@ -38,9 +38,23 @@ class SessionManager {
     return prefs.containsKey('is_user_login');
   }
 
-  static Future<User_Registration> isUserId() async {
+  // static Future<User_Registration> isUserId() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   print("isUserId() called " + prefs.get('user').toString());
+  //   User_Registration userData = prefs.get('user') as User_Registration;
+  //   return userData;
+  // }
+
+  static Future<User_Registration?> isUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get('user_id') as User_Registration;
+    String? userJson = prefs.getString('user');
+    if (userJson != null) {
+      Map<String, dynamic> userDataMap = json.decode(userJson);
+      User_Registration userData = User_Registration.fromJson(userDataMap);
+      return userData;
+    } else {
+      return null;
+    }
   }
 
   static logout() async {

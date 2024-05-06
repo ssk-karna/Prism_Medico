@@ -20,8 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
     SessionManager.isUserLogin().then((value) => {
           if (value == true)
             {
-              SessionManager.isUserId().then((id) => {
-                    if (userDetails.id == id)
+              SessionManager.isUserId().then((userData) => {
+                    if (userData != null)
                       {
                         SessionManager.getcartList().then((data) {
                           setState(() {
